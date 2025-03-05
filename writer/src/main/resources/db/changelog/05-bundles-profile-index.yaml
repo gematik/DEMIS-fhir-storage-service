@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_index_bundles_profile
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: profile
+            indexName: idx_bundles_profile
+            tableName: bundles

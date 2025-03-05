@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_columns_bundles_purger
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addColumn:
+            tableName: bundles
+            columns:
+              - column:
+                  remarks: 'Purger that is currently purging the bundle'
+                  name: purger_id
+                  type: VARCHAR(255)
+              - column:
+                  remarks: 'Number of current attempt to purge the bundle'
+                  name: purger_attempt
+                  type: NUMERIC(2, 0)
+              - column:
+                  remarks: 'The timestamp when the purger started the current attempt to purge the bundle'
+                  name: purger_started
+                  type: TIMESTAMP WITH TIME ZONE
+  - changeSet:
+      id: add_foreign_key_hapi_bundles_bundle_id
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: hapi_bundles
+            baseColumnNames: bundle_id
+            constraintName: fk_hapi_bundles_bundle_id
+            referencedTableName: bundles
+            referencedColumnNames: id
+            onDelete: CASCADE

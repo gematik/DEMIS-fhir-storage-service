@@ -1,0 +1,122 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_table_binaries
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_binaries
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: last_updated
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: responsible_department
+                  type: VARCHAR(255)
+              - column:
+                  name: tags
+                  type: jsonb
+              - column:
+                  name: source_id
+                  type: VARCHAR(50)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: content_type
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: data
+                  type: bytea
+            tableName: binaries
+  - changeSet:
+      id: create_table_bundles
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_bundles
+                  name: id
+                  type: UUID
+              - column:
+                  constraints:
+                    nullable: false
+                  name: last_updated
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: responsible_department
+                  type: VARCHAR(255)
+              - column:
+                  name: tags
+                  type: jsonb
+              - column:
+                  name: source_id
+                  type: VARCHAR(50)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: content
+                  type: bytea
+              - column:
+                  name: profile
+                  type: VARCHAR(255)
+            tableName: bundles
+  - changeSet:
+      id: create_index_binaries_last_updated
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: last_updated
+            indexName: idx_binaries_last_updated
+            tableName: binaries
+  - changeSet:
+      id: create_index_binaries_responsible_department
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: responsible_department
+            indexName: idx_binaries_responsible_department
+            tableName: binaries
+  - changeSet:
+      id: create_index_bundles_last_updated
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: last_updated
+            indexName: idx_bundles_last_updated
+            tableName: bundles
+  - changeSet:
+      id: create_index_bundles_responsible_department
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: responsible_department
+            indexName: idx_bundles_responsible_department
+            tableName: bundles
+

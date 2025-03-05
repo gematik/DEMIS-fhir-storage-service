@@ -1,0 +1,48 @@
+info:
+  app:
+    name: @project.name@
+    version: @project.version@
+
+spring:
+  config:
+    import: classpath:/base-config-application.yaml
+
+  threads.virtual.enabled: true
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+
+fss:
+  reader:
+    server-url: ${EXTERNAL_SERVER_URL:http://localhost:${server.port:8080}}
+    context-path: /notification-clearing-api/fhir
+  search:
+    max-page-size: 200
+    default-page-size: 50
+  security:
+    role-profile-mapping:
+      bed-occupancy-fetcher: "https://demis.rki.de/fhir/StructureDefinition/ReportBundle"
+      disease-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease"
+      igs-notification-data-fetcher: "https://demis.rki.de/fhir/igs/StructureDefinition/NotificationBundleSequence"
+      pathogen-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratory"
+      proof-of-disease-notification-excerpt-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease"
+      proof-of-pathogen-notification-excerpt-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratory"
+      proof-of-pathogen-non-nominal-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryNonNominal"
+      proof-of-pathogen-anonymous-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryAnonymous"
+      proof-of-pathogen-negative-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryNegative"
+      # To be removed after the new Profile Snapshot 5.1.x is deployed
+      proof-of-pathogen-not-by-name-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryNotByName"
+

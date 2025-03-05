@@ -1,0 +1,40 @@
+info:
+  app:
+    name: @project.name@
+    version: @project.version@
+
+spring:
+  config:
+    import: classpath:/base-config-application.yaml
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 5
+
+fss:
+  hapi:
+    enabled: ${FEATURE_FLAG_HAPI:true}
+    url: ${CONFIG_FHIR_SERVER_URL:http://hapi-fhir-jpaserver:8080/fhir}
+    client:
+      log-requests: ${CONFIG_FHIR_CLIENT_LOG_REQUESTS:true}
+      socket-timeout: ${CONFIG_FHIR_CLIENT_SOCKET_TIMEOUT:60s}
+  purger:
+    attempts:
+      limit: ${CONFIG_PURGE_ATTEMPTS_MAX:3}
+      timeout: ${CONFIG_PURGE_ATTEMPTS_COOLDOWN:2h}
+    batches:
+      size: ${CONFIG_PURGE_BATCH_SIZE:1000}
+      limit: ${CONFIG_PURGE_BATCH_MAX:0}
+    periods:
+      default-period: 30d

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: update_last_updated_column_for_bundles
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addDefaultValue:
+            tableName: bundles
+            columnName: last_updated
+            defaultValueComputed: CURRENT_TIMESTAMP
+  - changeSet:
+      id: update_last_updated_column_for_binaries
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - addDefaultValue:
+            tableName: binaries
+            columnName: last_updated
+            defaultValueComputed: CURRENT_TIMESTAMP

@@ -1,0 +1,17 @@
+{{- if not .Values.istio.enable }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "fhir-storage-writer.fullversionname" . }}
+  labels:
+    {{- include "fhir-storage-writer.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.ports.http }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "fhir-storage-writer.selectorLabels" . | nindent 4 }}
+{{- end }}

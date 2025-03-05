@@ -1,0 +1,26 @@
+{
+  "resourceType": "Binary",
+  "id": "84d6cb09-924a-42c2-a786-0ec0d9271d4a",
+  "meta": {
+    "versionId": "1",
+    "lastUpdated": "2024-01-02T14:19:29.114+01:00",
+    "source": "061f30ab559170b6c4db82ca25ef6daa",
+    "tag": [
+      {
+        "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment",
+        "code": "1.01.0.53."
+      },
+      {
+        "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier",
+        "code": "1.11.0.11.01."
+      },
+      {
+        "system": "https://demis.rki.de/fhir/CodeSystem/RelatedNotificationBundle",
+        "code": "1a3a16aa-64e0-5eb1-8601-018fc3794b6e",
+        "display": "Relates to message with identifier: 1a3a16aa-64e0-5eb1-8601-018fc3794b6e"
+      }
+    ]
+  },
+  "contentType": "application/cms",
+  "data": "xxxyyyzzz123"
+}

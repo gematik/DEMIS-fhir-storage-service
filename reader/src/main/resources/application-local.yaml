@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fhir-storage
+    username: fhir-storage-reader
+    password: GC00rPuAoa1tdjvV/DNk
+
+server:
+  port: 9091
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        orm.jdbc.bind: trace
