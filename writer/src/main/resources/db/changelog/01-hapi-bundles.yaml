@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: create_table_hapi_bundles
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_hapi_bundles
+                  name: bundle_id
+                  type: UUID
+              - column:
+                  name: modified_at
+                  type: DATETIME
+              - column:
+                  name: status
+                  type: SMALLINT
+              - column:
+                  name: response_code
+                  type: INT
+              - column:
+                  name: hapi_id
+                  type: VARCHAR(255)
+              - column:
+                  name: error
+                  type: VARCHAR(1024)
+            tableName: hapi_bundles
+  - changeSet:
+      id: create_index_hapi_bundles_status
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createIndex:
+            columns:
+              - column:
+                  name: status
+            indexName: idx_hapi_bundles_status
+            tableName: hapi_bundles
+

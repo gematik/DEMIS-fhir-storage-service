@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - include:
+      file: classpath:db/changelog/init-changelog.yaml
+  - include:
+      file: classpath:db/changelog/01-hapi-bundles.yaml
+  - include:
+      file: classpath:db/changelog/02-bundles-new-columns.yaml
+  - include:
+      file: classpath:db/changelog/03-last-updated-column.yaml
+  - include:
+      file: classpath:db/changelog/04-purger-bundles.yaml
+  - include:
+      file: classpath:db/changelog/05-bundles-profile-index.yaml
+  - include:
+      file: classpath:db/changelog/06-default-table-permissions.yaml
+  - include:
+      file: classpath:db/changelog/07-purger-columns.yaml

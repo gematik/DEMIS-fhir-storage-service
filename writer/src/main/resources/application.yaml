@@ -1,0 +1,41 @@
+info:
+  app:
+    name: @project.name@
+    version: @project.version@
+
+spring:
+  config:
+    import: classpath:/base-config-application.yaml
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog.yaml
+    user: fhir-storage-writer-ddl
+    url: ${DB_URL}
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+
+fss:
+  hapi:
+    enabled: ${FEATURE_FLAG_HAPI:true}
+    log-requests: true
+    url: http://hapi-fhir-jpaserver:8080/fhir
+    cron: 0 0 2 * * *
+    threads:
+      core-size: ${CONFIG_HAPI_CLIENT_THREADS_CORE_SIZE:2}
+      max-size: ${CONFIG_HAPI_CLIENT_THREADS_MAX_SIZE:2}
+      queue-capacity: ${CONFIG_HAPI_CLIENT_THREADS_QUEUE_CAPACITY:500}

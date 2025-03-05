@@ -1,0 +1,29 @@
+{
+  "request": {
+    "url": "/fhir",
+    "method": "POST",
+    "headers": {
+      "Content-Type": {
+        "contains": "application/fhir+json"
+      }
+    },
+    "bodyPatterns": [
+      {
+        "matchesJsonPath": "$[?(@.resourceType == 'Bundle')]"
+      },
+      {
+        "matchesJsonPath": "$[?(@.type == 'batch')]"
+      },
+      {
+        "matchesJsonPath": "$.entry[?(@.request.url == 'Bundle/10006')]"
+      }
+    ]
+  },
+  "response": {
+    "status": 200,
+    "body": "{\"resourceType\":\"Bundle\",\"id\":\"7be1a8a3-44b4-48b2-896b-a2268dfc3cb5\",\"type\":\"batch-response\",\"link\":[{\"relation\":\"self\",\"url\":\"http://hapi-fhir-jpaserver/fhir\"}],\"entry\":[{\"response\":{\"status\":\"500 Internal Server Error\",\"outcome\":{\"resourceType\":\"OperationOutcome\",\"issue\":[{\"severity\":\"error\",\"code\":\"processing\",\"diagnostics\":\"Failed to delete Bundle/10006\"}]}}},{\"response\":{\"status\":\"204 No Content\"}}]}",
+    "headers": {
+      "Content-Type": "application/fhir+json; charset=utf-8"
+    }
+  }
+}

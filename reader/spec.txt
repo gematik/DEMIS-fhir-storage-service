@@ -1,0 +1,229 @@
+Id:
+===
+
+Not Found:
+404
+
+{
+  "resourceType": "OperationOutcome",
+  "issue": [ {
+    "severity": "error",
+    "code": "processing",
+    "diagnostics": "Resource is not known"
+  } ]
+}
+
+Found
+200
+
+{
+  "resourceType": "Bundle",
+  "id": "1",
+  "meta": {
+  ...
+}
+
+
+Search:
+=======
+
+SearchSet
+
+{
+  "resourceType": "Bundle",
+  "id": "157757f2-2e3d-42ed-ba5e-24bd30ca4cb0",
+  "meta": {
+    "lastUpdated": "2024-06-10T09:26:01.287+02:00"
+  },
+  "type": "searchset",
+  "total": 12,
+  "link": [ {
+    "relation": "self",
+    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_lastUpdated=ge2023-01-14"
+  } ],
+  "entry": [ {
+    "fullUrl": "https://ingress.local/notification-clearing-api/fhir/Bundle/1",
+    "resource": {
+      "resourceType": "Bundle",
+      "id": "1",
+      "meta": {
+        "versionId": "1",
+        "lastUpdated": "2024-05-21T20:33:45.529+02:00",
+        "source": "#1f82925a-32d1-98",
+        "profile": [ "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratory" ],
+        "tag": [ {
+          "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment",
+          "code": "1.01.0.53."
+        }, {
+          "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentSubmitter",
+          "code": "1.01.0.53."
+        }, {
+          "system": "https://demis.rki.de/fhir/CodeSystem/RelatedNotificationBundle",
+          "code": "2319716d-6b00-5a38-889b-9b4e42431476",
+          "display": "Relates to message with identifier: 2319716d-6b00-5a38-889b-9b4e42431476"
+        }, {
+          "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentPrimaryAddress",
+          "code": "1.01.0.53."
+        }, {
+          "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier",
+          "code": "1.01.0.53."
+        } ]
+      },
+      "identifier": {
+        "system": "https://demis.rki.de/fhir/NamingSystem/NotificationBundleId",
+        "value": "b70b4100-d00e-4d79-bbec-c887e0f91572"
+      },
+      "type": "document",
+      "timestamp": "2021-03-04T20:16:01.000+01:00",
+      "entry": [ ]
+    },
+    "search": {
+      "mode": "match"
+    }
+  },
+  {
+    "fullUrl": "https://ingress.local/notification-clearing-api/fhir/Bundle/3",
+    "resource": {
+    },
+    "search": {
+      "mode": "match"
+    }
+  }
+  ]
+}
+
+No Matches:
+{
+  "resourceType": "Bundle",
+  "id": "743d27ca-d308-40b0-a4d9-bc346bbfa137",
+  "meta": {
+    "lastUpdated": "2024-06-10T09:33:59.814+02:00"
+  },
+  "type": "searchset",
+  "total": 0,
+  "link": [ {
+    "relation": "self",
+    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_lastUpdated=ge2025-01-14"
+  } ]
+}
+
+Count:
+_count=11
+  "type": "searchset",
+  "total": 12,
+  "link": [ {
+    "relation": "self",
+    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_count=11&_lastUpdated=gt2023-01-14&_sort=_lastUpdated"
+  }, {
+    "relation": "next",
+    "url": "https://ingress.local/notification-clearing-api/fhir?_getpages=f839c87c-dca3-461e-8170-8d4cc43af040&_getpagesoffset=11&_count=11&_pretty=true&_bundletype=searchset"
+  } ],
+
+falls count > total, dann fällt next relation weg
+  "total": 12,
+  "link": [ {
+    "relation": "self",
+    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_count=13&_lastUpdated=gt2023-01-14&_sort=_lastUpdated"
+  } ],
+
+
+Invalid Request Param
+200
+=> Werden einfach ignoriert
+
+Invalid Date
+400
+{
+  "resourceType": "OperationOutcome",
+  "issue": [ {
+    "severity": "error",
+    "code": "processing",
+    "diagnostics": "HAPI-1882: Invalid date/time format: \"25-01-14\""
+  } ]
+}
+
+Unknown Prefix-Operator
+400
+{
+  "resourceType": "OperationOutcome",
+  "issue": [ {
+    "severity": "error",
+    "code": "processing",
+    "diagnostics": "HAPI-1941: Invalid prefix: \"gu\""
+  } ]
+}
+
+Unknown Sort Property
+{
+  "resourceType": "OperationOutcome",
+  "issue": [ {
+    "severity": "error",
+    "code": "processing",
+    "diagnostics": "HAPI-1194: Unknown _sort parameter value \"_lastUpdatedUnknwo\" for resource type \"Bundle\" (Note: sort parameters values must use a valid Search Parameter). Valid values for this search are: [_content, _id, _lastUpdated, _profile, _security, _source, _tag, _text, composition, identifier, message, timestamp, type]"
+  } ]
+}
+
+
+TODO SummaryEnum?
+
+Request Params:
+3 = {SearchParameter@15574} "ca.uhn.fhir.rest.server.method.SearchParameter@f6a8edc[name=_filter,required=false]"
+4 = {SearchParameter@15575} "ca.uhn.fhir.rest.server.method.SearchParameter@311c0027[name=_content,required=false]"
+5 = {SearchParameter@15576} "ca.uhn.fhir.rest.server.method.SearchParameter@151053a9[name=_text,required=false]"
+6 = {SearchParameter@15577} "ca.uhn.fhir.rest.server.method.SearchParameter@7e24e5fd[name=_tag,required=false]"
+7 = {SearchParameter@15578} "ca.uhn.fhir.rest.server.method.SearchParameter@4019476[name=_security,required=false]"
+8 = {SearchParameter@15579} "ca.uhn.fhir.rest.server.method.SearchParameter@290eb3fd[name=_profile,required=false]"
+9 = {SearchParameter@15580} "ca.uhn.fhir.rest.server.method.SearchParameter@72c9d46e[name=_source,required=false]"
+10 = {SearchParameter@15581} "ca.uhn.fhir.rest.server.method.SearchParameter@2b1bdcc7[name=_has,required=false]"
+11 = {SearchParameter@15582} "ca.uhn.fhir.rest.server.method.SearchParameter@23b14ff6[name=_id,required=false]"
+12 = {SearchParameter@15583} "ca.uhn.fhir.rest.server.method.SearchParameter@7ffc9126[name=composition,required=false]"
+13 = {SearchParameter@15584} "ca.uhn.fhir.rest.server.method.SearchParameter@43aa5013[name=identifier,required=false]"
+14 = {SearchParameter@15585} "ca.uhn.fhir.rest.server.method.SearchParameter@36224145[name=message,required=false]"
+15 = {SearchParameter@15586} "ca.uhn.fhir.rest.server.method.SearchParameter@1fc57688[name=timestamp,required=false]"
+16 = {SearchParameter@15587} "ca.uhn.fhir.rest.server.method.SearchParameter@42ba1f7[name=type,required=false]"
+17 = {RawParamsParameter@15588}
+18 = {SearchParameter@15472} "ca.uhn.fhir.rest.server.method.SearchParameter@78d041fe[name=_lastUpdated,required=false]"
+
+Param Value Split "," => OR
+- bei DateRange aber nicht erlaubt
+
+Date:
+ca.uhn.fhir.rest.param.DateParam.setValueAsString
+  ca.uhn.fhir.model.primitive.BaseDateTimeDt.setValueAsString
+	public static final String NOW_DATE_CONSTANT = "%now";
+	public static final String TODAY_DATE_CONSTANT = "%today";
+
+	ca.uhn.fhir.rest.param.DateRangeParam.setValuesAsQueryTokens
+
+
+Immer beschränkte suche? Max count?
+
+
+curl --location 'localhost:9091/fhir/Bundle?_tag=https%3A%2F%2Fdemis.rki.de%2Ffhir%2FCodeSystem%2FResponsibleDepartment%7C1.01.0.53.&_tag=https%3A%2F%2Fdemis.rki.de%2Ffhir%2FCodeSystem%2FRelatedNotificationBundle%7C12345&_lastUpdated=gt2024-01-01&_sort=lastUpdated'
+
+
+
+
+{
+  "resourceType": "Bundle",
+  "id": "87ae0236-e76a-415a-baeb-06b9a06c1829",
+  "meta": {
+    "lastUpdated": "2024-06-14T08:29:05.488+02:00"
+  },
+  "type": "searchset",
+  "total": 0,
+  "link": [ {
+    "relation": "self",
+    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_count=13&_lastUpdated=gt2023-01-14&_lastUpdated2=&_sort=_lastUpdated&_tag=https%3A%2F%2Fdemis.rki.de%2Ffhir%2FCodeSystem%2FResponsibleDepartment%7C1.01.0.53.&_tag=https%3A%2F%2Fdemis.rki.de%2Ffhir%2FCodeSystem%2FRelatedNotificationBundle%7C12345"
+  } ]
+}
+
+
+{
+  "resourceType": "OperationOutcome",
+  "issue": [ {
+    "severity": "error",
+    "code": "processing",
+    "diagnostics": "HAPI-1930: DateRange parameter does not support OR queries"
+  } ]
+}

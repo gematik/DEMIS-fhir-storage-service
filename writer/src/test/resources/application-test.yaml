@@ -1,0 +1,11 @@
+logging:
+  level:
+    de.gematik.demis.storage: DEBUG
+    org.hibernate:
+      SQL: DEBUG
+      orm.jdbc.bind: trace
+
+fss:
+  hapi:
+    # disable scheduled task
+    cron: "-"

@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: default_table_permissions
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - sql:
+            comment: "set initial table permissions fhir-storage-reader"
+            sql: >
+              GRANT SELECT ON binaries TO "fhir-storage-reader";
+              GRANT SELECT ON bundles TO "fhir-storage-reader";
+              GRANT SELECT ON hapi_bundles TO "fhir-storage-reader";
+              GRANT SELECT ON databasechangelog TO "fhir-storage-reader";
+              ALTER DEFAULT PRIVILEGES IN SCHEMA demis_fhir GRANT SELECT ON TABLES TO "fhir-storage-reader";
+        - sql:
+            comment: "set initial table permissions fhir-storage-writer"
+            sql: >
+              GRANT SELECT, INSERT ON binaries TO "fhir-storage-writer";
+              GRANT SELECT, INSERT ON bundles TO "fhir-storage-writer";
+              GRANT SELECT, INSERT, UPDATE ON hapi_bundles TO "fhir-storage-writer";
+              GRANT SELECT ON databasechangelog TO "fhir-storage-writer";
+              ALTER DEFAULT PRIVILEGES IN SCHEMA demis_fhir GRANT SELECT, INSERT, UPDATE ON TABLES TO "fhir-storage-writer";
+        - sql:
+            comment: "set initial table permissions fhir-storage-purger"
+            sql: >
+              GRANT SELECT, DELETE ON binaries TO "fhir-storage-purger";
+              GRANT SELECT, DELETE ON bundles TO "fhir-storage-purger";
+              GRANT SELECT, UPDATE, DELETE ON hapi_bundles TO "fhir-storage-purger";
+              GRANT SELECT ON databasechangelog TO "fhir-storage-purger";
+              ALTER DEFAULT PRIVILEGES IN SCHEMA demis_fhir GRANT SELECT, UPDATE, DELETE ON TABLES TO "fhir-storage-purger";
