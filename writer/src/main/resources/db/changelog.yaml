@@ -15,3 +15,5 @@ databaseChangeLog:
       file: classpath:db/changelog/06-default-table-permissions.yaml
   - include:
       file: classpath:db/changelog/07-purger-columns.yaml
+  - include:
+      file: classpath:db/changelog/08-drop-hapi-bundles.yaml

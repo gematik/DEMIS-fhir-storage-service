@@ -19,6 +19,10 @@ package de.gematik.demis.storage.purger.internal.bundle;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -30,7 +34,7 @@ import static org.mockito.Mockito.when;
 
 import de.gematik.demis.storage.purger.common.batches.BatchesConfiguration;
 import de.gematik.demis.storage.purger.common.periods.PeriodsConfiguration;
-import de.gematik.demis.storage.purger.test.SqlQueries;
+import de.gematik.demis.storage.purger.common.periods.ResponsibleDepartmentPeriod;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.time.Period;
@@ -39,39 +43,27 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class BundleBatchPurgeRepositoryTest {
 
-  private static final int LIMIT = 10;
-  private static final String LIMIT_PARAM_NAME = "limit";
+  private static final int LIMIT_VALUE = 10;
+  private static final String LIMIT_PARAM_NAME = "batchSize";
   private static final UUID DELETED_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
-  private static final String SQL_DELETE_BATCH =
-      """
-WITH periods AS (SELECT 'default-period' AS rule, NULL AS value, 30 AS period)    DELETE
-      FROM bundles
-     WHERE id IN (SELECT id
-                    FROM (SELECT b.id,
-                                 b.last_updated,
-                                 COALESCE(p2.period, p1.period) AS period_applied
-                            FROM bundles b
-                            JOIN periods p1 ON p1.rule = 'default-period'
-                       LEFT JOIN periods p2 ON p2.rule = 'responsible-department' AND b.responsible_department = p2.value
-                         ) AS b1
-                   WHERE (EXTRACT(DAY FROM (CURRENT_TIMESTAMP - b1.last_updated))) >= period_applied
-                   LIMIT :limit
-                 )
-    RETURNING id;
-""";
+  private static final String DEFAULT_PERIOD_PARAM_NAME = "defaultPeriodInDays";
+  private static final int DEFAULT_PERIOD_VALUE = 30;
+
+  private final PeriodsConfiguration periodsConfiguration =
+      new PeriodsConfiguration(
+          Period.ofDays(DEFAULT_PERIOD_VALUE),
+          List.of(new ResponsibleDepartmentPeriod("1.0.21.0", Period.ofDays(60))));
 
   @Mock private EntityManager entityManager;
   @Mock private BatchesConfiguration batchesConfiguration;
-  @Mock private PeriodsConfiguration periodsConfiguration;
   @Mock private Query query;
-  @InjectMocks private BundleBatchPurgeRepository repository;
+  private BundleBatchPurgeRepository repository;
 
   @Test
   void givenValidInputsWhenDeleteExpiredBundlesThenReturnList() {
@@ -79,28 +71,27 @@ WITH periods AS (SELECT 'default-period' AS rule, NULL AS value, 30 AS period)  
     // given
     mockConfiguration();
     mockJpa();
+    repository =
+        new BundleBatchPurgeRepository(entityManager, batchesConfiguration, periodsConfiguration);
     repository.initialize();
 
     // when
     List<UUID> batch = repository.purgeExpiredRecords();
 
     // then
-    final List<String> nativeQueries = getNativeQueries();
-    verifyDeleteStatement(nativeQueries);
+    verifyDeleteStatement();
     assertThat(batch).hasSize(1).containsExactly(DELETED_ID);
   }
 
   private void mockConfiguration() {
-    when(batchesConfiguration.size()).thenReturn(LIMIT);
-    when(periodsConfiguration.defaultPeriod()).thenReturn(Period.ofDays(30));
-    when(periodsConfiguration.responsibleDepartments()).thenReturn(List.of());
-    when(periodsConfiguration.bundleProfiles()).thenReturn(List.of());
+    when(batchesConfiguration.size()).thenReturn(LIMIT_VALUE);
   }
 
   private void mockJpa() {
     // delete
     when(entityManager.createNativeQuery(any())).thenReturn(query);
-    when(query.setParameter(LIMIT_PARAM_NAME, LIMIT)).thenReturn(query);
+    when(query.setParameter(LIMIT_PARAM_NAME, LIMIT_VALUE)).thenReturn(query);
+    when(query.setParameter(DEFAULT_PERIOD_PARAM_NAME, DEFAULT_PERIOD_VALUE)).thenReturn(query);
     when(query.getResultList()).thenReturn(List.of(DELETED_ID));
   }
 
@@ -110,11 +101,17 @@ WITH periods AS (SELECT 'default-period' AS rule, NULL AS value, 30 AS period)  
     return capturedNativeQueries.getAllValues();
   }
 
-  private void verifyDeleteStatement(List<String> nativeQueries) {
-    assertThat(SqlQueries.normalize(nativeQueries.getFirst()))
-        .as("delete bundles statement with selective deletion periods table")
-        .isEqualTo(SqlQueries.normalize(SQL_DELETE_BATCH));
-    verify(query, times(1)).setParameter(LIMIT_PARAM_NAME, LIMIT);
+  private void verifyDeleteStatement() {
+    ArgumentCaptor<String> capturedNativeQueries = ArgumentCaptor.forClass(String.class);
+    verify(entityManager, times(1)).createNativeQuery(capturedNativeQueries.capture());
+    List<String> nativeQueries = capturedNativeQueries.getAllValues();
+    assertThat(nativeQueries).hasSize(1);
+    assertThat(nativeQueries.getFirst())
+        .contains("bundles")
+        .contains(DEFAULT_PERIOD_PARAM_NAME)
+        .contains(LIMIT_PARAM_NAME);
+    verify(query, times(1)).setParameter(LIMIT_PARAM_NAME, LIMIT_VALUE);
+    verify(query, times(1)).setParameter(DEFAULT_PERIOD_PARAM_NAME, DEFAULT_PERIOD_VALUE);
     verify(query, times(1)).getResultList();
   }
 }

@@ -19,6 +19,10 @@ package de.gematik.demis.storage.purger.internal;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -28,7 +32,6 @@ import de.gematik.demis.storage.common.entity.BinaryEntity;
 import de.gematik.demis.storage.common.entity.BundleEntity;
 import de.gematik.demis.storage.purger.FhirStoragePurger;
 import de.gematik.demis.storage.purger.FhirStoragePurgerJob;
-import de.gematik.demis.storage.purger.external.hapi.PurgerHapiBundleEntity;
 import de.gematik.demis.storage.purger.test.TestLog;
 import de.gematik.demis.storage.purger.test.TestWithPostgresContainer;
 import java.nio.charset.StandardCharsets;
@@ -60,8 +63,7 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @SpringBootTest(properties = {"fss.purger.batches.size=3", "fss.purger.batches.limit=3"})
 @ActiveProfiles("test")
-@EntityScan(
-    basePackageClasses = {BundleEntity.class, PurgerHapiBundleEntity.class, BinaryEntity.class})
+@EntityScan(basePackageClasses = {BundleEntity.class, BinaryEntity.class})
 @Slf4j
 public abstract class InternalPurgeIntegrationTest extends TestWithPostgresContainer {
 
@@ -92,7 +94,17 @@ public abstract class InternalPurgeIntegrationTest extends TestWithPostgresConta
    * @param activeRecords register test cases with active records
    * @param expiredRecords register test cases with expired records
    */
-  protected abstract void initialize(ActiveRecords activeRecords, ExpiredRecords expiredRecords);
+  protected abstract void createDefaultPeriodTests(
+      ActiveRecords activeRecords, ExpiredRecords expiredRecords);
+
+  /**
+   * Initialize everything needed for the test: log listeners, database, etc.
+   *
+   * @param activeRecords register test cases with active records
+   * @param expiredRecords register test cases with expired records
+   */
+  protected abstract void createResponsibleDepartmentPeriodTests(
+      ActiveRecords activeRecords, ExpiredRecords expiredRecords);
 
   protected abstract CrudRepository<?, UUID> getRepository();
 
@@ -100,7 +112,8 @@ public abstract class InternalPurgeIntegrationTest extends TestWithPostgresConta
   final void setup() {
     auditLog = TestLog.audit();
     log.info("Preparing database");
-    initialize(this::putActiveRecord, this::putExpiredRecord);
+    createDefaultPeriodTests(this::putActiveRecord, this::putExpiredRecord);
+    createResponsibleDepartmentPeriodTests(this::putActiveRecord, this::putExpiredRecord);
   }
 
   private void putActiveRecord(String testCase, UUID key) {
@@ -125,7 +138,7 @@ public abstract class InternalPurgeIntegrationTest extends TestWithPostgresConta
     verify();
   }
 
-  protected final OffsetDateTime toOffsetDateTime(Instant instant) {
+  protected static final OffsetDateTime toOffsetDateTime(Instant instant) {
     return OffsetDateTime.ofInstant(instant, ZoneId.of("Europe/Berlin"));
   }
 

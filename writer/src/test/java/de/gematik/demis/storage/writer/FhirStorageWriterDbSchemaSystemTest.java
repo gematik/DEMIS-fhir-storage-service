@@ -19,6 +19,10 @@ package de.gematik.demis.storage.writer;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -27,20 +31,14 @@ import static de.gematik.demis.storage.writer.test.TestData.createBinaryEntity;
 import static de.gematik.demis.storage.writer.test.TestData.createBundleEntity;
 import static de.gematik.demis.storage.writer.test.TestData.readResourceAsString;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
 import static org.springframework.boot.test.context.SpringBootTest.UseMainMethod.ALWAYS;
 
 import de.gematik.demis.storage.common.entity.AbstractResourceEntity;
-import de.gematik.demis.storage.common.entity.HapiBundleEntity;
-import de.gematik.demis.storage.common.entity.HapiSyncedStatus;
 import de.gematik.demis.storage.writer.test.TestWithPostgresContainer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.transaction.Transactional;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.UUID;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -116,25 +114,5 @@ class FhirStorageWriterDbSchemaSystemTest extends TestWithPostgresContainer {
         .isNotNull()
         .isNotEqualTo(uncompressedContent)
         .hasSizeLessThan(uncompressedContent.length);
-  }
-
-  @Test
-  void hapiBundlesTableIsCreatedAndMatchesEntity() {
-    final var bundleEntity = createBundleEntity();
-    entityManager.persist(bundleEntity);
-
-    final HapiBundleEntity hapiBundleEntity = new HapiBundleEntity();
-    final UUID bundleId = bundleEntity.getId();
-    hapiBundleEntity.setBundleId(bundleId);
-
-    entityManager.persist(hapiBundleEntity);
-    entityManager.flush();
-    entityManager.clear();
-
-    final HapiBundleEntity dbResult = entityManager.find(HapiBundleEntity.class, bundleId);
-    assertThat(dbResult).isNotNull();
-    assertThat(dbResult.getStatus()).isEqualTo(HapiSyncedStatus.NEW);
-    assertThat(dbResult.getModifiedAt())
-        .isCloseTo(LocalDateTime.now(), within(500, ChronoUnit.MILLIS));
   }
 }

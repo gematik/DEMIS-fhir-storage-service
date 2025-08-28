@@ -28,10 +28,15 @@ spring:
 fss:
   reader:
     server-url: ${EXTERNAL_SERVER_URL:http://localhost:${server.port:8080}}
-    context-path: /notification-clearing-api/fhir
+    context-path: ${API_ENTRYPOINT:/notification-clearing-api/fhir/} # The API_ENTRYPOINT for the FHIR API is set to / if FEATURE_FLAG_NEW_API_ENDPOINTS=true
   search:
     max-page-size: 200
     default-page-size: 50
+    ignored-params:
+      - _summary
+      - _elements
+      - _total
+      - _pretty
   security:
     role-profile-mapping:
       bed-occupancy-fetcher: "https://demis.rki.de/fhir/StructureDefinition/ReportBundle"
@@ -40,9 +45,10 @@ fss:
       pathogen-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratory"
       proof-of-disease-notification-excerpt-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease"
       proof-of-pathogen-notification-excerpt-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratory"
-      proof-of-pathogen-non-nominal-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryNonNominal"
-      proof-of-pathogen-anonymous-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryAnonymous"
-      proof-of-pathogen-negative-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryNegative"
-      # To be removed after the new Profile Snapshot 5.1.x is deployed
-      proof-of-pathogen-not-by-name-notification-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryNotByName"
+      pathogen-notification-nonnominal-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryNonNominal"
+      pathogen-notification-anonymous-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryAnonymous"
+      pathogen-notification-negative-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleLaboratoryNegative"
+      disease-notification-nonnominal-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDiseaseNonNominal"
+      disease-notification-anonymous-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDiseaseAnonymous"
+      ars-data-fetcher: "https://demis.rki.de/fhir/ars/StructureDefinition/Bundle"
 

@@ -19,11 +19,14 @@ package de.gematik.demis.storage.writer.config;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,8 +37,6 @@ public class FhirConfiguration {
   @Bean
   public FhirContext fhirContext() {
     log.debug("creating r4 context");
-    final var fhirContext = FhirContext.forR4Cached();
-    fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-    return fhirContext;
+    return FhirContext.forR4Cached();
   }
 }

@@ -19,6 +19,10 @@ package de.gematik.demis.storage.purger.internal.binary;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -48,55 +52,9 @@ import org.springframework.data.repository.CrudRepository;
 class BinaryIntegrationTest extends InternalPurgeIntegrationTest {
 
   @Autowired private BinaryIntegrationTestRepository repository;
-  private ActiveRecords activeRecords;
-  private ExpiredRecords expiredRecords;
 
-  @Override
-  protected CrudRepository<BinaryEntity, UUID> getRepository() {
-    return repository;
-  }
-
-  @Override
-  protected void initialize(ActiveRecords activeRecords, ExpiredRecords expiredRecords) {
-    this.activeRecords = activeRecords;
-    this.expiredRecords = expiredRecords;
-    createBinaries();
-  }
-
-  private void createBinaries() {
-    for (int i = 1; i <= 3; i++) {
-      createDefaultPeriodBinaries(i);
-    }
-    for (int i = 1; i <= 2; i++) {
-      createSelectivePeriodBinaries(i);
-    }
-  }
-
-  private void createDefaultPeriodBinaries(int i) {
-    activeRecords.accept(
-        "binary with normal department and no expired period " + i,
-        createBinary(DEPARTMENT_DEFAULT, PERIOD_NOT_EXPIRED));
-    expiredRecords.accept(
-        "binary with normal department and expired default period " + i,
-        createBinary(DEPARTMENT_DEFAULT, PERIOD_DEFAULT_EXPIRED));
-    expiredRecords.accept(
-        "binary with normal department and expired extended department period " + i,
-        createBinary(DEPARTMENT_DEFAULT, PERIOD_DEPARTMENT_EXPIRED));
-  }
-
-  private void createSelectivePeriodBinaries(int i) {
-    activeRecords.accept(
-        "binary with extended department and no expired period " + i,
-        createBinary(DEPARTMENT_SPECIAL, PERIOD_NOT_EXPIRED));
-    activeRecords.accept(
-        "binary with extended department and expired default period " + i,
-        createBinary(DEPARTMENT_SPECIAL, PERIOD_DEFAULT_EXPIRED));
-    expiredRecords.accept(
-        "binary with extended department and expired extended department period " + i,
-        createBinary(DEPARTMENT_SPECIAL, PERIOD_DEPARTMENT_EXPIRED));
-  }
-
-  private UUID createBinary(String department, Instant lastUpdated) {
+  private static UUID createBinary(
+      BinaryIntegrationTestRepository repository, String department, Instant lastUpdated) {
     final BinaryEntity binary = new BinaryEntity();
     binary.setResponsibleDepartment(department);
     binary.setData(BINARY);
@@ -106,5 +64,65 @@ class BinaryIntegrationTest extends InternalPurgeIntegrationTest {
     final UUID binaryId = binary.getId();
     repository.updateLastUpdatedTimestamps(toOffsetDateTime(lastUpdated), List.of(binaryId));
     return binaryId;
+  }
+
+  private static void createDefaultPeriodBinaries(
+      BinaryIntegrationTestRepository repository,
+      ActiveRecords activeRecords,
+      ExpiredRecords expiredRecords,
+      int i) {
+    activeRecords.accept(
+        "binary with normal department and no expired period " + i,
+        createBinary(repository, DEPARTMENT_DEFAULT, PERIOD_NOT_EXPIRED));
+    expiredRecords.accept(
+        "binary with normal department and expired default period " + i,
+        createBinary(repository, DEPARTMENT_DEFAULT, PERIOD_DEFAULT_EXPIRED));
+    expiredRecords.accept(
+        "binary with normal department and expired extended department period " + i,
+        createBinary(repository, DEPARTMENT_DEFAULT, PERIOD_DEPARTMENT_EXPIRED));
+  }
+
+  static void createDefaultPeriodBinaries(
+      BinaryIntegrationTestRepository repository,
+      ActiveRecords activeRecords,
+      ExpiredRecords expiredRecords) {
+    for (int i = 1; i <= 3; i++) {
+      createDefaultPeriodBinaries(repository, activeRecords, expiredRecords, i);
+    }
+  }
+
+  private static void createResponsibleDepartmentPeriodBinaries(
+      BinaryIntegrationTestRepository repository,
+      ActiveRecords activeRecords,
+      ExpiredRecords expiredRecords,
+      int i) {
+    activeRecords.accept(
+        "binary with extended department and no expired period " + i,
+        createBinary(repository, DEPARTMENT_SPECIAL, PERIOD_NOT_EXPIRED));
+    activeRecords.accept(
+        "binary with extended department and expired default period " + i,
+        createBinary(repository, DEPARTMENT_SPECIAL, PERIOD_DEFAULT_EXPIRED));
+    expiredRecords.accept(
+        "binary with extended department and expired extended department period " + i,
+        createBinary(repository, DEPARTMENT_SPECIAL, PERIOD_DEPARTMENT_EXPIRED));
+  }
+
+  @Override
+  protected CrudRepository<BinaryEntity, UUID> getRepository() {
+    return repository;
+  }
+
+  @Override
+  protected void createDefaultPeriodTests(
+      ActiveRecords activeRecords, ExpiredRecords expiredRecords) {
+    createDefaultPeriodBinaries(repository, activeRecords, expiredRecords);
+  }
+
+  @Override
+  protected void createResponsibleDepartmentPeriodTests(
+      ActiveRecords activeRecords, ExpiredRecords expiredRecords) {
+    for (int i = 1; i <= 2; i++) {
+      createResponsibleDepartmentPeriodBinaries(repository, activeRecords, expiredRecords, i);
+    }
   }
 }

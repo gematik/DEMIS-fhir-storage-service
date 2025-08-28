@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.common.search;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -37,8 +41,11 @@ import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import de.gematik.demis.storage.common.entity.Tag;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.MultiValueMap;
 
@@ -53,6 +60,12 @@ public class RequestParamFilterResolver<F extends Filter> {
 
   private final Supplier<F> filterInstanceSupplier;
   private final Map<String, BiConsumer<List<String>, F>> additionalParameter;
+
+  public Set<String> getSupportedFilterParams() {
+    return Stream.concat(
+            COMMON_FILTER_PARAMETER.keySet().stream(), additionalParameter.keySet().stream())
+        .collect(Collectors.toUnmodifiableSet());
+  }
 
   public F createFilterFromRequestParameters(final MultiValueMap<String, String> requestParams) {
     final F filter = filterInstanceSupplier.get();

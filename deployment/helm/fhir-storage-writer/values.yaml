@@ -3,7 +3,7 @@ debug:
   enable: false
 
 # Number of Pod Replicas desired
-replicaCount: 1
+replicaCount: 2
 
 # Required Values for the Chart
 required:
@@ -31,12 +31,11 @@ secret:
 
 # Environment Variables to be defined
 customEnvVars:
-  DB_URL: "jdbc:postgresql://pgbouncer:5432/fhir-storage"
+  DB_URL: "jdbc:postgresql://pgbouncer.demis.svc.cluster.local/fhir-storage"
   DB_USER: fhir-storage-writer
+  SPRING_LIQUIBASE_ENABLED: false
   SPRING_LIQUIBASE_USER: fhir-storage-writer-ddl
-  CONFIG_HAPI_CLIENT_THREADS_CORE_SIZE: 2
-  CONFIG_HAPI_CLIENT_THREADS_MAX_SIZE: 2
-  CONFIG_HAPI_CLIENT_THREADS_QUEUE_CAPACITY: 500
+  FEATURE_FLAG_NEW_API_ENDPOINTS: false
 
 # Extra labels for deployments
 deploymentLabels: {}
@@ -116,10 +115,10 @@ service:
 # Default Resources
 resources:
   limits:
-    memory: "1Gi"
+    memory: "500Mi"
   requests:
-    cpu: "200m"
-    memory: "256Mi"
+    cpu: "150m"
+    memory: "500Mi"
 
 autoscaling:
   enabled: false

@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.common.sql;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -31,6 +35,7 @@ import static org.mockito.Mockito.when;
 import de.gematik.demis.storage.common.entity.BundleEntity;
 import de.gematik.demis.storage.common.entity.Tag;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Query;
 import java.util.List;
 import java.util.UUID;
@@ -59,6 +64,8 @@ class SimpleJpaRepositoryWithSqlSupportTest {
     final JpaEntityInformation<BundleEntity, UUID> entityInformation =
         mock(JpaEntityInformation.class);
     when(entityInformation.getJavaType()).thenReturn(BundleEntity.class);
+    final EntityManagerFactory emf = mock(EntityManagerFactory.class);
+    when(entityManager.getEntityManagerFactory()).thenReturn(emf);
 
     underTest = new SimpleJpaRepositoryWithSqlSupport<>(entityInformation, entityManager);
   }

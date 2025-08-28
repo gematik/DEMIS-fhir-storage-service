@@ -17,8 +17,3 @@ logging:
 #        orm.jdbc.bind: trace
   pattern:
     level: "%X{traceId:-}/%X{spanId:-} -%5p"
-
-fss:
-  hapi:
-    url: http://localhost:9999/fhir
-    cron: "*/10 * * * * *"

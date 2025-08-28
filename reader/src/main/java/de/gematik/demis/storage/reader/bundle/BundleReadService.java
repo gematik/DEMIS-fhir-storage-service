@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.bundle;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -29,7 +33,6 @@ import static de.gematik.demis.storage.reader.api.ParameterNames.PARAM_PROFILE;
 import ca.uhn.fhir.rest.param.TokenParam;
 import de.gematik.demis.service.base.error.ServiceException;
 import de.gematik.demis.storage.common.entity.BundleEntity;
-import de.gematik.demis.storage.common.reader.BundleMapper;
 import de.gematik.demis.storage.reader.common.ReadService;
 import de.gematik.demis.storage.reader.common.search.RequestParamFilterResolver;
 import de.gematik.demis.storage.reader.common.search.SearchSetService;
@@ -53,7 +56,7 @@ public class BundleReadService extends ReadService<BundleEntity, Bundle, BundleF
           PARAM_PROFILE, BundleReadService::requestParameterProfile,
           PARAM_IDENTIFIER, BundleReadService::requestParameterIdentifier);
 
-  public BundleReadService(
+  BundleReadService(
       final BundleReadonlyRepository repository,
       final BundleMapper mapper,
       final SearchProps searchProps,

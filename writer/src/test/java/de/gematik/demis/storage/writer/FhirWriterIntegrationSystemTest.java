@@ -19,6 +19,10 @@ package de.gematik.demis.storage.writer;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -32,11 +36,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.gematik.demis.AbstractOpenApiSpecDownloaderTest;
 import de.gematik.demis.service.base.error.rest.api.ErrorDTO;
 import de.gematik.demis.storage.common.entity.AbstractResourceEntity;
 import de.gematik.demis.storage.common.entity.BinaryEntity;
 import de.gematik.demis.storage.common.entity.BundleEntity;
-import de.gematik.demis.storage.common.entity.HapiBundleEntity;
 import de.gematik.demis.storage.writer.test.TestData;
 import de.gematik.demis.storage.writer.test.TestWithPostgresContainer;
 import de.gematik.demis.storage.writer.test.TransactionBuilder;
@@ -52,6 +56,7 @@ import org.assertj.core.api.SoftAssertions;
 import org.hl7.fhir.r4.model.Binary;
 import org.hl7.fhir.r4.model.Bundle;
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -76,7 +81,8 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
 
   private static final String ENDPOINT = "/notification-clearing-api/fhir/";
 
-  private static final String TRACE_ID = "091f30ab559170b6c4db82ca25ef6dab";
+  private static final String TRACE_ID = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
+  private static final String EXPECTED_TRACE_ID = TRACE_ID.split("-")[1];
   private static final String VALID_BINARY_JSON = readResourceAsString(BINARY_FHIR_JSON);
   private static final String VALID_BUNDLE_JSON = readResourceAsString(BUNDLE_DOCUMENT_FHIR_JSON);
 
@@ -120,7 +126,7 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
           .assertThat(dbResult)
           .as("resource %s: %s", i, idStrings[i])
           .isNotNull()
-          .returns(TRACE_ID, AbstractResourceEntity::getSourceId)
+          .returns(EXPECTED_TRACE_ID, AbstractResourceEntity::getSourceId)
           .usingRecursiveComparison()
           .ignoringFields("id", "sourceId", "lastUpdated")
           .isEqualTo(expectedEntities.get(i));
@@ -129,8 +135,6 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
           .assertThat(dbResult.getLastUpdated())
           .as("lastUpdated set by database")
           .isNotNull();
-
-      assertHapiSync(assertions, dbResult);
     }
 
     assertions.assertAll();
@@ -138,16 +142,6 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
     assertThat(rowCountAfter - rowCountBefore)
         .as("created rows in database")
         .isEqualTo(expectedEntities.size());
-  }
-
-  private void assertHapiSync(
-      final SoftAssertions assertions, final AbstractResourceEntity dbResult) {
-    final var hapiBundleEntity = entityManager.find(HapiBundleEntity.class, dbResult.getId());
-    if (dbResult instanceof BundleEntity) {
-      assertions.assertThat(hapiBundleEntity).as("bundle -> hapi synced entity").isNotNull();
-    } else {
-      assertions.assertThat(hapiBundleEntity).as("binary -> no hapi entity").isNull();
-    }
   }
 
   private AbstractResourceEntity loadResourceFromDb(final String resourceId) {
@@ -211,7 +205,7 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
     final var headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     headers.setAcceptLanguageAsLocales(List.of(Locale.GERMAN));
-    headers.set("X-B3-TraceId", TRACE_ID);
+    headers.set("traceparent", TRACE_ID);
     final HttpEntity<String> request = new HttpEntity<>(input, headers);
 
     final ResponseEntity<String> response =
@@ -226,5 +220,10 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
     log.info("Response Body: {}", body);
 
     return body;
+  }
+
+  @Nested
+  class OpenApiSpecDownloaderTest extends AbstractOpenApiSpecDownloaderTest {
+    // executes test from OpenApiSpecDownloaderTest
   }
 }

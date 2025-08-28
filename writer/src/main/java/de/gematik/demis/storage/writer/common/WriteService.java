@@ -19,6 +19,10 @@ package de.gematik.demis.storage.writer.common;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -40,10 +44,7 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Bundle.BundleEntryComponent;
 import org.hl7.fhir.r4.model.Bundle.BundleType;
 import org.hl7.fhir.r4.model.Resource;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.support.TransactionTemplate;
-import org.springframework.util.Assert;
 
 @Service
 @RequiredArgsConstructor
@@ -54,8 +55,6 @@ public class WriteService {
   private final ResourceRepository repository;
   private final CommonFieldMapper commonFieldMapper;
   private final ResourceDispatcher resourceDispatcher;
-  private final TransactionTemplate transactionTemplate;
-  private final ApplicationEventPublisher eventPublisher;
 
   private static List<String> extractIds(final List<AbstractResourceEntity> saved) {
     return map(saved, AbstractResourceEntity::toResourceId);
@@ -78,9 +77,7 @@ public class WriteService {
     final var resourcesToStore = getResources(resource);
     validate(resourcesToStore);
     final var entities = createEntities(resourcesToStore);
-    final var savedEntities =
-        transactionTemplate.execute(
-            status -> saveEntitiesAndFireEvents(resourcesToStore, entities));
+    final var savedEntities = saveEntitiesInOneTransaction(entities);
     return extractIds(savedEntities);
   }
 
@@ -124,23 +121,8 @@ public class WriteService {
     return entity;
   }
 
-  private List<AbstractResourceEntity> saveEntitiesAndFireEvents(
-      final List<? extends IBaseResource> resources, final List<AbstractResourceEntity> entities) {
-    final var saved = repository.saveAll(entities);
-    publishSaveEventsInTx(resources, saved);
-    return saved;
-  }
-
-  private void publishSaveEventsInTx(
-      final List<? extends IBaseResource> resources,
-      final List<AbstractResourceEntity> savedEntities) {
-    Assert.state(
-        resources.size() == savedEntities.size(),
-        () -> "Number of saved entities does not match number of resources stored");
-    for (int i = 0; i < resources.size(); i++) {
-      final var event = new ResourceSavedEvent<>(resources.get(i), savedEntities.get(i));
-      log.debug("fire event: {}", event);
-      eventPublisher.publishEvent(event);
-    }
+  private List<AbstractResourceEntity> saveEntitiesInOneTransaction(
+      final List<AbstractResourceEntity> entities) {
+    return repository.saveAll(entities);
   }
 }

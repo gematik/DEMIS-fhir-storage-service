@@ -19,22 +19,35 @@ package de.gematik.demis.storage.reader.common;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
 import static de.gematik.demis.storage.reader.api.ParameterNames.PARAM_COUNT;
+import static de.gematik.demis.storage.reader.api.ParameterNames.PARAM_FORMAT;
 import static de.gematik.demis.storage.reader.api.ParameterNames.PARAM_OFFSET;
+import static de.gematik.demis.storage.reader.api.ParameterNames.PARAM_SORT;
+import static de.gematik.demis.storage.reader.api.ParameterNames.PARAM_SORT_ASC;
+import static de.gematik.demis.storage.reader.api.ParameterNames.PARAM_SORT_DESC;
 import static de.gematik.demis.storage.reader.error.ErrorCode.RESOURCE_NOT_FOUND;
 import static java.util.Optional.ofNullable;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.gematik.demis.storage.common.entity.AbstractResourceEntity;
-import de.gematik.demis.storage.common.reader.EntityResourceMapper;
 import de.gematik.demis.storage.reader.common.search.Filter;
 import de.gematik.demis.storage.reader.common.search.RequestParamFilterResolver;
 import de.gematik.demis.storage.reader.common.search.SearchSetService;
 import de.gematik.demis.storage.reader.common.search.SortResolver;
 import de.gematik.demis.storage.reader.common.security.Caller;
 import de.gematik.demis.storage.reader.config.FssReaderConfigProperties.SearchProps;
+import de.gematik.demis.storage.reader.error.ErrorCode;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +65,9 @@ public abstract class ReadService<
     E extends AbstractResourceEntity, R extends Resource, F extends Filter> {
 
   private static final Logger QUERY_RESULT_LOGGER = LoggerFactory.getLogger("queryresult");
+
+  private static final Set<String> SUPPORTED_NO_FILTER_PARAMS =
+      Set.of(PARAM_SORT, PARAM_SORT_ASC, PARAM_SORT_DESC, PARAM_COUNT, PARAM_OFFSET, PARAM_FORMAT);
 
   private final ResourceReadonlyRepository<E> repository;
   private final EntityResourceMapper<E, R> mapper;
@@ -83,6 +99,7 @@ public abstract class ReadService<
         getResourceType(),
         requestParams);
 
+    validateRequestParams(requestParams);
     final F filter = requestParamFilterResolver.createFilterFromRequestParameters(requestParams);
 
     enforceFilter(caller, filter);
@@ -105,9 +122,21 @@ public abstract class ReadService<
   private void logQueryResult(
       final MultiValueMap<String, String> requestParams, final Page<R> resources) {
     if (QUERY_RESULT_LOGGER.isInfoEnabled()) {
-      final var ids = resources.get().map(this::getBusinessId).toArray();
-      QUERY_RESULT_LOGGER.info(
-          "{} {} -> {} {}", getResourceType(), requestParams, resources.getTotalElements(), ids);
+      try {
+        final List<String> ids = resources.get().map(this::getBusinessId).toList();
+        final Map<String, Object> query = new LinkedHashMap<>();
+        query.put("resource", getResourceType());
+        query.put("parameters", requestParams.toString());
+        final Map<String, Object> result = new LinkedHashMap<>();
+        result.put("total", resources.getTotalElements());
+        result.put("ids", ids);
+        final Map<String, Object> queryResult = new LinkedHashMap<>();
+        queryResult.put("query", query);
+        queryResult.put("result", result);
+        QUERY_RESULT_LOGGER.info(new ObjectMapper().writeValueAsString(queryResult));
+      } catch (Exception e) {
+        log.warn("Failed to log query result", e);
+      }
     }
   }
 
@@ -129,7 +158,34 @@ public abstract class ReadService<
             searchProps.maxPageSize());
     final int offset = ofNullable(toInteger(requestParams.getFirst(PARAM_OFFSET))).orElse(0);
 
+    if (count <= 0) {
+      throw ErrorCode.INVALID_PAGING.exception("_count must be greater than 0 but is " + count);
+    }
+    if (offset < 0) {
+      throw ErrorCode.INVALID_PAGING.exception("_offset must be >= 0 but is " + offset);
+    }
+
     // little problem. PageRequest does not support offset - just page
+    if (offset % count > 0) {
+      log.warn("offset {} is not a multiple of the page size of {}", offset, count);
+    }
     return PageRequest.of(offset / count, count);
+  }
+
+  private void validateRequestParams(final MultiValueMap<String, String> requestParams) {
+    final Set<String> filterParams = requestParamFilterResolver.getSupportedFilterParams();
+    final List<String> unsupportedParams =
+        requestParams.keySet().stream()
+            .filter(
+                param ->
+                    !filterParams.contains(param)
+                        && !SUPPORTED_NO_FILTER_PARAMS.contains(param)
+                        && !searchProps.ignoredParams().contains(param))
+            .toList();
+
+    if (!unsupportedParams.isEmpty()) {
+      throw ErrorCode.UNSUPPORTED_REQUEST_PARAMETER.exception(
+          "Unsupported request params: " + unsupportedParams);
+    }
   }
 }

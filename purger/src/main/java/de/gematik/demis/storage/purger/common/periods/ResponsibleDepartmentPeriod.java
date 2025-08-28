@@ -19,13 +19,19 @@ package de.gematik.demis.storage.purger.common.periods;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
 import java.time.Period;
 
 /**
- * Period of a specific responsible health department
+ * Individual deletion/retention period of a specific responsible health department. This only
+ * happens in production when a health department requests it. And it is not permanent and will be
+ * most likely be removed within a few weeks.
  *
  * @param department Identifier of the responsible health department
  * @param period Period of the responsible health department

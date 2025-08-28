@@ -19,9 +19,14 @@ package de.gematik.demis.storage.reader.api;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
+import java.util.Set;
 import lombok.Generated;
 
 public class ParameterNames {
@@ -53,4 +58,18 @@ public class ParameterNames {
 
   // header
   public static final String HEADER_SENDER = "x-sender";
+
+  public static final Set<String> SUPPORTED_PARAMETERS =
+      Set.of(
+          PARAM_LAST_UPDATED,
+          PARAM_TAG,
+          PARAM_SOURCE,
+          PARAM_PROFILE,
+          PARAM_IDENTIFIER,
+          PARAM_SORT,
+          PARAM_SORT_ASC,
+          PARAM_SORT_DESC,
+          PARAM_COUNT,
+          PARAM_OFFSET,
+          PARAM_FORMAT);
 }

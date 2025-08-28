@@ -23,16 +23,7 @@ spring:
       maximum-pool-size: 5
 
 fss:
-  hapi:
-    enabled: ${FEATURE_FLAG_HAPI:true}
-    url: ${CONFIG_FHIR_SERVER_URL:http://hapi-fhir-jpaserver:8080/fhir}
-    client:
-      log-requests: ${CONFIG_FHIR_CLIENT_LOG_REQUESTS:true}
-      socket-timeout: ${CONFIG_FHIR_CLIENT_SOCKET_TIMEOUT:60s}
   purger:
-    attempts:
-      limit: ${CONFIG_PURGE_ATTEMPTS_MAX:3}
-      timeout: ${CONFIG_PURGE_ATTEMPTS_COOLDOWN:2h}
     batches:
       size: ${CONFIG_PURGE_BATCH_SIZE:1000}
       limit: ${CONFIG_PURGE_BATCH_MAX:0}

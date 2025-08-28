@@ -19,6 +19,10 @@ package de.gematik.demis.storage.purger.internal.binary;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -30,7 +34,6 @@ import static org.mockito.Mockito.when;
 
 import de.gematik.demis.storage.purger.common.batches.BatchesConfiguration;
 import de.gematik.demis.storage.purger.common.periods.PeriodsConfiguration;
-import de.gematik.demis.storage.purger.test.SqlQueries;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import java.time.Period;
@@ -46,26 +49,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 class BinaryBatchPurgeRepositoryTest {
 
-  private static final int LIMIT = 10;
-  private static final String LIMIT_PARAM_NAME = "limit";
+  private static final int LIMIT_VALUE = 10;
+  private static final String LIMIT_PARAM_NAME = "batchSize";
   private static final UUID DELETED_ID = UUID.fromString("00000000-0000-0000-0000-000000000001");
-  private static final String SQL_DELETE_BATCH =
-      """
-WITH periods AS (SELECT 'default-period' AS rule, NULL AS value, 30 AS period)    DELETE
-      FROM binaries
-     WHERE id IN (SELECT id
-                    FROM (SELECT b.id,
-                                 b.last_updated,
-                                 COALESCE(p2.period, p1.period) AS period_applied
-                            FROM binaries b
-                            JOIN periods p1 ON p1.rule = 'default-period'
-                       LEFT JOIN periods p2 ON p2.rule = 'responsible-department' AND b.responsible_department = p2.value
-                         ) AS b1
-                   WHERE (EXTRACT(DAY FROM (CURRENT_TIMESTAMP - b1.last_updated))) >= period_applied
-                   LIMIT :limit
-                 )
-    RETURNING id;
-""";
+  private static final String DEFAULT_PERIOD_PARAM_NAME = "defaultPeriodInDays";
+  private static final int DEFAULT_PERIOD_VALUE = 30;
 
   @Mock private EntityManager entityManager;
   @Mock private BatchesConfiguration batchesConfiguration;
@@ -85,36 +73,34 @@ WITH periods AS (SELECT 'default-period' AS rule, NULL AS value, 30 AS period)  
     List<UUID> batch = repository.purgeExpiredRecords();
 
     // then
-    final List<String> nativeQueries = getNativeQueries();
-    verifyDeleteStatement(nativeQueries);
+    verifyNativeQuery();
     assertThat(batch).hasSize(1).containsExactly(DELETED_ID);
   }
 
   private void mockConfiguration() {
-    when(batchesConfiguration.size()).thenReturn(LIMIT);
-    when(periodsConfiguration.defaultPeriod()).thenReturn(Period.ofDays(30));
-    when(periodsConfiguration.responsibleDepartments()).thenReturn(List.of());
-    when(periodsConfiguration.bundleProfiles()).thenReturn(List.of());
+    when(batchesConfiguration.size()).thenReturn(LIMIT_VALUE);
+    when(periodsConfiguration.defaultPeriod()).thenReturn(Period.ofDays(DEFAULT_PERIOD_VALUE));
   }
 
   private void mockJpa() {
     // delete
     when(entityManager.createNativeQuery(any())).thenReturn(query);
-    when(query.setParameter(LIMIT_PARAM_NAME, LIMIT)).thenReturn(query);
+    when(query.setParameter(LIMIT_PARAM_NAME, LIMIT_VALUE)).thenReturn(query);
+    when(query.setParameter(DEFAULT_PERIOD_PARAM_NAME, DEFAULT_PERIOD_VALUE)).thenReturn(query);
     when(query.getResultList()).thenReturn(List.of(DELETED_ID));
   }
 
-  private List<String> getNativeQueries() {
+  private void verifyNativeQuery() {
     ArgumentCaptor<String> capturedNativeQueries = ArgumentCaptor.forClass(String.class);
     verify(entityManager, times(1)).createNativeQuery(capturedNativeQueries.capture());
-    return capturedNativeQueries.getAllValues();
-  }
-
-  private void verifyDeleteStatement(List<String> nativeQueries) {
-    assertThat(SqlQueries.normalize(nativeQueries.getFirst()))
-        .as("delete binaries statement with selective deletion periods table")
-        .isEqualTo(SqlQueries.normalize(SQL_DELETE_BATCH));
-    verify(query, times(1)).setParameter(LIMIT_PARAM_NAME, LIMIT);
+    List<String> nativeQueries = capturedNativeQueries.getAllValues();
+    assertThat(nativeQueries).hasSize(1);
+    assertThat(nativeQueries.getFirst())
+        .contains("binaries")
+        .contains(DEFAULT_PERIOD_PARAM_NAME)
+        .contains(LIMIT_PARAM_NAME);
+    verify(query, times(1)).setParameter(LIMIT_PARAM_NAME, LIMIT_VALUE);
+    verify(query, times(1)).setParameter(DEFAULT_PERIOD_PARAM_NAME, DEFAULT_PERIOD_VALUE);
     verify(query, times(1)).getResultList();
   }
 }
