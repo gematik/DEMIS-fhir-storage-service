@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.error;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -31,11 +35,10 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ErrorCode {
   RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND),
-  INVALID_DATE_TIME_FORMAT(HttpStatus.BAD_REQUEST),
-  INVALID_PREFIX_OPERATOR(HttpStatus.BAD_REQUEST),
-  UNKNOWN_SORT_PARAMETER_VALUE(HttpStatus.BAD_REQUEST),
   UNSUPPORTED_SORT(HttpStatus.BAD_REQUEST),
+  UNSUPPORTED_REQUEST_PARAMETER(HttpStatus.BAD_REQUEST),
   INVALID_FILTER(HttpStatus.BAD_REQUEST),
+  INVALID_PAGING(HttpStatus.BAD_REQUEST),
   FORBIDDEN(HttpStatus.FORBIDDEN);
 
   private final HttpStatus httpStatus;

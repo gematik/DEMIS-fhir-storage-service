@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.api;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -41,11 +45,11 @@ class BinaryReadControllerIntegrationTest extends CommonControllerTest<BinaryEnt
   private static final String ENDPOINT_SEARCH = BASE_PATH;
 
   private static final String EXPECTED_ID_RESULT_JSON =
-      """
+"""
 {"resourceType":"Binary","contentType":"application/cms"}
 """;
   private static final String EXPECTED_ID_RESULT_XML =
-      """
+"""
 <Binary xmlns="http://hl7.org/fhir"><contentType value="application/cms"></contentType></Binary>
 """;
 

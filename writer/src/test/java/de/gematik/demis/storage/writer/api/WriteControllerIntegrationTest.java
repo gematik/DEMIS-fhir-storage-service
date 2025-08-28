@@ -19,6 +19,10 @@ package de.gematik.demis.storage.writer.api;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -41,10 +45,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(WriteController.class)
@@ -53,7 +57,7 @@ class WriteControllerIntegrationTest {
   private static final String ENDPOINT = "/notification-clearing-api/fhir/";
 
   private static final String FHIR_INPUT = "does not matter";
-  @MockBean WriteService writeService;
+  @MockitoBean WriteService writeService;
   @Autowired MockMvc mockMvc;
 
   @Test

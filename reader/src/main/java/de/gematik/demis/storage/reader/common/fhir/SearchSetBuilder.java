@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.common.fhir;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -35,6 +39,7 @@ public class SearchSetBuilder {
 
   private static final String LINK_RELATION_SELF = "self";
   private static final String LINK_RELATION_NEXT = "next";
+  private static final String LINK_RELATION_PREVIOUS = "previous";
 
   private Date lastUpdated;
   private List<? extends Resource> resources;
@@ -42,6 +47,7 @@ public class SearchSetBuilder {
   private String resourceBaseUrl;
   private String selfLink;
   private String nextLink;
+  private String previousLink;
 
   public Bundle build() {
     final Bundle bundle = new Bundle();
@@ -62,6 +68,10 @@ public class SearchSetBuilder {
 
     if (nextLink != null) {
       bundle.addLink().setRelation(LINK_RELATION_NEXT).setUrl(nextLink);
+    }
+
+    if (previousLink != null) {
+      bundle.addLink().setRelation(LINK_RELATION_PREVIOUS).setUrl(previousLink);
     }
   }
 

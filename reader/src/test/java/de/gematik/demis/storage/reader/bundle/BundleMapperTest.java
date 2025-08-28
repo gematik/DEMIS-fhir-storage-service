@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.bundle;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -28,7 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import ca.uhn.fhir.context.FhirContext;
 import de.gematik.demis.storage.common.entity.BundleEntity;
-import de.gematik.demis.storage.common.reader.BundleMapper;
 import de.gematik.demis.storage.reader.test.TestData;
 import org.hl7.fhir.r4.model.Bundle;
 import org.junit.jupiter.api.Test;

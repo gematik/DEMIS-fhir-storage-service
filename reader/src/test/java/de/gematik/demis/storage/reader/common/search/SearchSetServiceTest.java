@@ -19,15 +19,23 @@ package de.gematik.demis.storage.reader.common.search;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
 import static de.gematik.demis.storage.reader.test.TestUtil.assertFhirResource;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import de.gematik.demis.storage.reader.config.FssReaderConfigProperties;
+import de.gematik.demis.storage.reader.test.TestUtil;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Bundle.BundleLinkComponent;
 import org.hl7.fhir.r4.model.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +49,7 @@ class SearchSetServiceTest {
   // Note: meta.lastUpdated is asserted separately
 
   private static final String EXPECTED =
-      """
+"""
     {
       "resourceType": "Bundle",
       "type": "searchset",
@@ -83,8 +91,25 @@ class SearchSetServiceTest {
     }
 """;
 
+  private final String LINKS_TEMPLATE =
+"""
+      {
+        "resourceType": "Bundle",
+        "link": [ {
+          "relation": "self",
+          "url": "%s"
+        }, {
+          "relation": "next",
+          "url": "%s"
+        }, {
+          "relation": "previous",
+          "url": "%s"
+        } ]
+      }
+""";
+
   private static final String EMPTY_EXPECTED =
-      """
+"""
 {
   "resourceType": "Bundle",
   "type": "searchset",
@@ -96,7 +121,9 @@ class SearchSetServiceTest {
 }
 """;
 
-  private final SearchSetService underTest = new SearchSetService();
+  private final SearchSetService underTest =
+      new SearchSetService(
+          new FssReaderConfigProperties.SearchProps(100, 10, Set.of("_pretty", "other")));
 
   private static Bundle createBundle(final String identifier) {
     final var bundle = new Bundle();
@@ -111,13 +138,13 @@ class SearchSetServiceTest {
     final var requestUrl =
         "http://localhost:9091/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2";
 
-    underTest.setUriComponentsBuilderSupplier(() -> UriComponentsBuilder.fromUriString(requestUrl));
+    setupSelfLink(requestUrl);
     underTest.setServerUrl("https://demis.de");
     underTest.setContextPath("/notification-clearing-api/fhir");
   }
 
   @Test
-  void createSearchSet() {
+  void createSearchSetForFirstPage() {
     final var resources = List.of(createBundle("Test-1"), createBundle("Test-2"));
     final var page = new PageImpl<>(resources, Pageable.ofSize(2), 5);
 
@@ -129,12 +156,31 @@ class SearchSetServiceTest {
   }
 
   @Test
+  void middlePageWithNextAndPreviousLinks() {
+    final String self =
+        "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2";
+    final String next =
+        "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=4";
+    final String prev =
+        "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=0";
+    final String expectedLinks = LINKS_TEMPLATE.formatted(self, next, prev);
+    setupSelfLink(self);
+
+    final var resources = List.of(createBundle("Test-1"), createBundle("Test-2"));
+    final var page = new PageImpl<>(resources, Pageable.ofSize(2).withPage(1), 5);
+
+    final Bundle searchSetBundle = underTest.createSearchSet(page);
+    final List<BundleLinkComponent> links = searchSetBundle.getLink();
+    TestUtil.assertFhirResource(new Bundle().setLink(links), expectedLinks);
+  }
+
+  @Test
   void noNextLink() {
     final var resources = List.of(createBundle("Test-1"), createBundle("Test-2"));
     final var page = new PageImpl<>(resources, Pageable.ofSize(2), 2);
 
     final Bundle searchSetBundle = underTest.createSearchSet(page);
-    final List<Bundle.BundleLinkComponent> links = searchSetBundle.getLink();
+    final List<BundleLinkComponent> links = searchSetBundle.getLink();
     assertThat(links).hasSize(1);
     final var selfLink = links.getFirst();
     assertThat(selfLink.getRelation()).isEqualTo("self");
@@ -146,5 +192,28 @@ class SearchSetServiceTest {
     final Bundle searchSetBundle = underTest.createSearchSet(page);
     searchSetBundle.getMeta().setLastUpdated(null);
     assertFhirResource(searchSetBundle, EMPTY_EXPECTED);
+  }
+
+  @Test
+  void cleanLink() {
+    final String requestUrl =
+        "https://demis.de/notification-clearing-api/fhir/Bundle?_format=json&_format=json&_format=json&_profile=a&_profile=b&_pretty=true&_count=2";
+    final String cleanedUri =
+        "https://demis.de/notification-clearing-api/fhir/Bundle?_format=json&_profile=a&_profile=b&_count=2";
+    final String expectedLinks =
+        LINKS_TEMPLATE.formatted(cleanedUri, cleanedUri + "&_offset=4", cleanedUri + "&_offset=0");
+    setupSelfLink(requestUrl);
+
+    final var resources = List.of(createBundle("Test-1"), createBundle("Test-2"));
+    final var page = new PageImpl<>(resources, Pageable.ofSize(2).withPage(1), 5);
+
+    final Bundle searchSetBundle = underTest.createSearchSet(page);
+    final List<BundleLinkComponent> links = searchSetBundle.getLink();
+    TestUtil.assertFhirResource(new Bundle().setLink(links), expectedLinks);
+  }
+
+  private void setupSelfLink(final String selfLinkUri) {
+    underTest.setUriComponentsBuilderSupplier(
+        () -> UriComponentsBuilder.fromUriString(selfLinkUri));
   }
 }

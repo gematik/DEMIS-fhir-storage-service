@@ -1,5 +1,6 @@
 logging:
   level:
+    de.gematik: DEBUG
     org.hibernate:
       SQL: DEBUG
       orm.jdbc.bind: trace
@@ -12,16 +13,11 @@ spring:
       mode: never
 
 fss:
-  hapi:
-    enabled: false
   purger:
     job:
       enabled: false
     periods:
       default-period: 30d
-      bundle-profiles:
-        - uri: https://demis.rki.de/fhir/igs/StructureDefinition/NotificationBundleSequence
-          period: 10d
       responsible-departments:
         - department: 1.01.0.53.
           period: 60d

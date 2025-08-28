@@ -5,7 +5,6 @@ logging:
       SQL: DEBUG
       orm.jdbc.bind: trace
 
-fss:
-  hapi:
-    # disable scheduled task
-    cron: "-"
+spring:
+  liquibase:
+    enabled: true

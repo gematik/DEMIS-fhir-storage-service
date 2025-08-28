@@ -19,6 +19,10 @@ package de.gematik.demis.storage.purger.internal.bundle;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -34,55 +38,50 @@ import org.springframework.data.repository.CrudRepository;
 class BundleIntegrationTest extends InternalPurgeIntegrationTest {
 
   @Autowired private BundleIntegrationTestRepository repository;
-  private ActiveRecords activeRecords;
-  private ExpiredRecords expiredRecords;
 
-  @Override
-  protected CrudRepository<BundleEntity, UUID> getRepository() {
-    return repository;
-  }
-
-  @Override
-  protected void initialize(ActiveRecords activeRecords, ExpiredRecords expiredRecords) {
-    this.activeRecords = activeRecords;
-    this.expiredRecords = expiredRecords;
-    createBundles();
-  }
-
-  private void createBundles() {
+  static void createDefaultPeriodBundles(
+      BundleIntegrationTestRepository repository,
+      ActiveRecords activeRecords,
+      ExpiredRecords expiredRecords) {
     for (int i = 1; i <= 3; i++) {
-      createDefaultPeriodBundles(i);
-    }
-    for (int i = 1; i <= 2; i++) {
-      createSelectivePeriodBundles(i);
+      createDefaultPeriodBundles(repository, activeRecords, expiredRecords, i);
     }
   }
 
-  private void createDefaultPeriodBundles(int i) {
+  private static void createDefaultPeriodBundles(
+      BundleIntegrationTestRepository repository,
+      ActiveRecords activeRecords,
+      ExpiredRecords expiredRecords,
+      int i) {
     activeRecords.accept(
         "bundle with normal department and no expired period " + i,
-        createBundle(DEPARTMENT_DEFAULT, PERIOD_NOT_EXPIRED));
+        createBundle(repository, DEPARTMENT_DEFAULT, PERIOD_NOT_EXPIRED));
     expiredRecords.accept(
         "bundle with normal department and expired default period " + i,
-        createBundle(DEPARTMENT_DEFAULT, PERIOD_DEFAULT_EXPIRED));
+        createBundle(repository, DEPARTMENT_DEFAULT, PERIOD_DEFAULT_EXPIRED));
     expiredRecords.accept(
         "bundle with normal department and expired extended department period " + i,
-        createBundle(DEPARTMENT_DEFAULT, PERIOD_DEPARTMENT_EXPIRED));
+        createBundle(repository, DEPARTMENT_DEFAULT, PERIOD_DEPARTMENT_EXPIRED));
   }
 
-  private void createSelectivePeriodBundles(int i) {
+  private static void createResponsibleDepartmentPeriodBundles(
+      BundleIntegrationTestRepository repository,
+      ActiveRecords activeRecords,
+      ExpiredRecords expiredRecords,
+      int i) {
     activeRecords.accept(
         "bundle with extended department and no expired period " + i,
-        createBundle(DEPARTMENT_SPECIAL, PERIOD_NOT_EXPIRED));
+        createBundle(repository, DEPARTMENT_SPECIAL, PERIOD_NOT_EXPIRED));
     activeRecords.accept(
         "bundle with extended department and expired default period " + i,
-        createBundle(DEPARTMENT_SPECIAL, PERIOD_DEFAULT_EXPIRED));
+        createBundle(repository, DEPARTMENT_SPECIAL, PERIOD_DEFAULT_EXPIRED));
     expiredRecords.accept(
         "bundle with extended department and expired extended department period " + i,
-        createBundle(DEPARTMENT_SPECIAL, PERIOD_DEPARTMENT_EXPIRED));
+        createBundle(repository, DEPARTMENT_SPECIAL, PERIOD_DEPARTMENT_EXPIRED));
   }
 
-  private UUID createBundle(String department, Instant lastUpdated) {
+  private static UUID createBundle(
+      BundleIntegrationTestRepository repository, String department, Instant lastUpdated) {
     final BundleEntity bundle = new BundleEntity();
     bundle.setResponsibleDepartment(department);
     bundle.setContent("binary content");
@@ -95,5 +94,24 @@ class BundleIntegrationTest extends InternalPurgeIntegrationTest {
     final UUID id = bundle.getId();
     repository.updateLastUpdatedTimestamps(toOffsetDateTime(lastUpdated), List.of(id));
     return id;
+  }
+
+  @Override
+  protected CrudRepository<BundleEntity, UUID> getRepository() {
+    return repository;
+  }
+
+  @Override
+  protected void createDefaultPeriodTests(
+      ActiveRecords activeRecords, ExpiredRecords expiredRecords) {
+    createDefaultPeriodBundles(repository, activeRecords, expiredRecords);
+  }
+
+  @Override
+  protected void createResponsibleDepartmentPeriodTests(
+      ActiveRecords activeRecords, ExpiredRecords expiredRecords) {
+    for (int i = 1; i <= 2; i++) {
+      createResponsibleDepartmentPeriodBundles(repository, activeRecords, expiredRecords, i);
+    }
   }
 }

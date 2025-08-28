@@ -19,10 +19,14 @@ package de.gematik.demis.storage.reader.api;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RequestMapping(path = "${fss.reader.context-path}/Bundle")
+@RequestMapping(path = "${fss.reader.context-path}Bundle")
 public interface BundleEndpoint extends ResourceEndpoint {}

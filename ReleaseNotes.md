@@ -2,6 +2,27 @@
  
 # Release notes
 
+## Release 1.3.0
+- Updated base image to gematik1/osadl-alpine-openjdk21-jre:1.0.3
+- add support for new API Endpoints
+ 
+## Release 1.2.2
+- Updated base image to gematik1/osadl-alpine-openjdk21-jre:1.0.2
+- Updated dependencies including HAPI FHIR 8.2.0
+- Updated Roles for supporting §7.3/§7.4 Notifications in Storage Reader
+
+## Release 1.2.1
+- Optimized purger SQL statements
+- Liquibase has to be explicitly enabled on deployment
+
+## Release 1.2.0
+- Removed feature: sync to HAPI FHIR server
+- Updated ospo-resources for adding additional notes and disclaimer
+- setting new resources in helm chart
+- setting new timeouts and retries in helm chart
+- change base chart to istio hostnames
+- updating dependencies
+
 ## Release 1.1.0
 - First official GitHub-Release
 - Update Base-Image to OSADL

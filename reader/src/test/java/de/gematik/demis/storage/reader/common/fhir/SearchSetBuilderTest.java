@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.common.fhir;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -33,7 +37,7 @@ import org.junit.jupiter.api.Test;
 class SearchSetBuilderTest {
 
   private static final String EXPECTED =
-      """
+"""
 {
   "resourceType": "Bundle",
   "meta": {
@@ -77,6 +81,51 @@ class SearchSetBuilderTest {
   } ]
 }""";
 
+  private static final String EXPECTED_2 =
+"""
+{
+  "resourceType": "Bundle",
+  "meta": {
+    "lastUpdated": "2024-08-01T17:17:31.906+02:00"
+  },
+  "type": "searchset",
+  "total": 5,
+  "link": [ {
+    "relation": "self",
+    "url": "https://demis.de/notifications/v1/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2"
+  }, {
+    "relation": "next",
+    "url": "https://demis.de/notifications/v1/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2"
+  } ],
+  "entry": [ {
+    "fullUrl": "https://demis.de/notifications/v1/fhir/Bundle/Test-1",
+    "resource": {
+      "resourceType": "Bundle",
+      "id": "Test-1",
+      "meta": {
+        "versionId": "1"
+      },
+      "type": "document"
+    },
+    "search": {
+      "mode": "match"
+    }
+  }, {
+    "fullUrl": "https://demis.de/notifications/v1/fhir/Bundle/Test-2",
+    "resource": {
+      "resourceType": "Bundle",
+      "id": "Test-2",
+      "meta": {
+        "versionId": "1"
+      },
+      "type": "document"
+    },
+    "search": {
+      "mode": "match"
+    }
+  } ]
+}""";
+
   private static Bundle createBundle(final String identifier) {
     final var bundle = new Bundle();
     bundle.setType(Bundle.BundleType.DOCUMENT);
@@ -104,5 +153,26 @@ class SearchSetBuilderTest {
     final Bundle searchSetBundle = underTest.build();
 
     assertFhirResource(searchSetBundle, EXPECTED);
+  }
+
+  @Test
+  void test2() {
+    final Date lastUpdated =
+        Date.from(ZonedDateTime.parse("2024-08-01T17:17:31.906+02:00").toInstant());
+    final var resources = List.of(createBundle("Test-1"), createBundle("Test-2"));
+    final SearchSetBuilder underTest = new SearchSetBuilder();
+    underTest
+        .setResources(resources)
+        .setLastUpdated(lastUpdated)
+        .setTotalElements(5)
+        .setResourceBaseUrl("https://demis.de/notifications/v1/fhir")
+        .setSelfLink(
+            "https://demis.de/notifications/v1/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2")
+        .setNextLink(
+            "https://demis.de/notifications/v1/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2");
+
+    final Bundle searchSetBundle = underTest.build();
+
+    assertFhirResource(searchSetBundle, EXPECTED_2);
   }
 }

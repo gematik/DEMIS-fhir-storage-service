@@ -1,0 +1,25 @@
+# Documentation for fhir-storage-reader
+
+<a name="documentation-for-api-endpoints"></a>
+## Documentation for API Endpoints
+
+All URIs are relative to *http://localhost*
+
+| Class | Method | HTTP request | Description |
+|------------ | ------------- | ------------- | -------------|
+| *BinaryReadControllerApi* | [**findById1**](Apis/BinaryReadControllerApi.md#findbyid1) | **GET** /notification-clearing-api/fhir/Binary/{id} |  |
+*BinaryReadControllerApi* | [**search1**](Apis/BinaryReadControllerApi.md#search1) | **GET** /notification-clearing-api/fhir/Binary |  |
+| *BundleReadControllerApi* | [**findById**](Apis/BundleReadControllerApi.md#findbyid) | **GET** /notification-clearing-api/fhir/Bundle/{id} |  |
+*BundleReadControllerApi* | [**search**](Apis/BundleReadControllerApi.md#search) | **GET** /notification-clearing-api/fhir/Bundle |  |
+
+
+<a name="documentation-for-models"></a>
+## Documentation for Models
+
+ - [MultiValueMapStringString](./Models/MultiValueMapStringString.md)
+
+
+<a name="documentation-for-authorization"></a>
+## Documentation for Authorization
+
+All endpoints do not require authorization.

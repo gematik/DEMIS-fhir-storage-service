@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: delete_table_hapi_bundles
+      author: demis@gematik.de
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - dropTable:
+            tableName: hapi_bundles

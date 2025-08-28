@@ -14,7 +14,7 @@ spring:
     open-in-view: false
 
   liquibase:
-    enabled: true
+    enabled: ${SPRING_LIQUIBASE_ENABLED:false}
     change-log: classpath:db/changelog.yaml
     user: fhir-storage-writer-ddl
     url: ${DB_URL}
@@ -30,12 +30,5 @@ spring:
       maximum-pool-size: 10
 
 fss:
-  hapi:
-    enabled: ${FEATURE_FLAG_HAPI:true}
-    log-requests: true
-    url: http://hapi-fhir-jpaserver:8080/fhir
-    cron: 0 0 2 * * *
-    threads:
-      core-size: ${CONFIG_HAPI_CLIENT_THREADS_CORE_SIZE:2}
-      max-size: ${CONFIG_HAPI_CLIENT_THREADS_MAX_SIZE:2}
-      queue-capacity: ${CONFIG_HAPI_CLIENT_THREADS_QUEUE_CAPACITY:500}
+  writer:
+    context-path: ${API_ENTRYPOINT:/notification-clearing-api/fhir/} # The API_ENTRYPOINT for the FHIR API is set to / if FEATURE_FLAG_NEW_API_ENDPOINTS=true

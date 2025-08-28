@@ -19,24 +19,34 @@ This project includes:
   Apache Commons Codec under Apache-2.0
   Apache Commons Collections under Apache License, Version 2.0
   Apache Commons Compress under Apache-2.0
+  Apache Commons CSV under Apache-2.0
   Apache Commons IO under Apache-2.0
   Apache Commons Lang under Apache-2.0
+  Apache Commons Net under Apache License, Version 2.0
   Apache Commons Text under Apache License, Version 2.0
   Apache HttpClient under Apache License, Version 2.0
   Apache HttpComponents Core HTTP/1.1 under Apache License, Version 2.0
   Apache HttpComponents Core HTTP/2 under Apache License, Version 2.0
-  Apache HttpCore under Apache License, Version 2.0
+  Apache Jena - ARQ under The Apache Software License, Version 2.0
+  Apache Jena - Base under The Apache Software License, Version 2.0
+  Apache Jena - Core under The Apache Software License, Version 2.0
+  Apache Jena - IRI under The Apache Software License, Version 2.0
+  Apache Jena - IRI3986 under The Apache Software License, Version 2.0
+  Apache Jena - ShEx under The Apache Software License, Version 2.0
   Apache Log4j API under Apache-2.0
+  Apache Thrift under The Apache Software License, Version 2.0
   asm under BSD-3-Clause
   ASM based accessors helper used by json-smart under The Apache Software License, Version 2.0
   AspectJ Weaver under Eclipse Public License - v 2.0
-  AssertJ Core under Apache License, Version 2.0
+  AssertJ Core under Apache-2.0
   Awaitility under Apache 2.0
   Byte Buddy (without dependencies) under Apache License, Version 2.0
   Byte Buddy agent under Apache License, Version 2.0
+  Caffeine cache under Apache License, Version 2.0
   Checker Qual under The MIT License
   ClassMate under Apache License, Version 2.0
   context-propagation under The Apache Software License, Version 2.0
+  dexx under MIT License
   docker-java-api under The Apache Software License, Version 2.0
   docker-java-transport under The Apache Software License, Version 2.0
   docker-java-transport-zerodep under The Apache Software License, Version 2.0
@@ -46,12 +56,12 @@ This project includes:
   fhir-storage-common under Licensed under the EUPL 1.2
   fhir-storage-writer under Licensed under the EUPL 1.2
   FindBugs-jsr305 under The Apache Software License, Version 2.0
+  Gson under Apache-2.0
   Guava InternalFutureFailureAccess and InternalFutures under The Apache Software License, Version 2.0
   Guava ListenableFuture only under The Apache Software License, Version 2.0
   Guava: Google Core Libraries for Java under Apache License, Version 2.0
-  Hamcrest under BSD License 3
-  Hamcrest Core under BSD License 3
-  HAPI FHIR - Client Framework under Apache Software License 2.0
+  Hamcrest under BSD-3-Clause
+  Hamcrest Core under BSD-3-Clause
   HAPI FHIR - Core Library under Apache Software License 2.0
   HAPI FHIR - ServiceLoaders - Caching API under Apache Software License 2.0
   HAPI FHIR Structures - FHIR R4 under Apache Software License 2.0
@@ -60,6 +70,8 @@ This project includes:
   Hibernate ORM - hibernate-core under GNU Library General Public License v2.1 or later
   Hibernate Validator Engine under Apache License 2.0
   HikariCP under The Apache Software License, Version 2.0
+  HL7 Core Artifact - R4 under Apache Software License 2.0
+  HL7 Core Artifact - Utilities under Apache Software License 2.0
   ICU4J under Unicode/ICU License
   istack common utility code runtime under Eclipse Distribution License - v 1.0
   J2ObjC Annotations under Apache License, Version 2.0
@@ -79,19 +91,19 @@ This project includes:
   jakarta.transaction API under EPL 2.0 or GPL2 w/ CPE
   Jandex: Core under Apache License, Version 2.0
   Java Native Access under LGPL-2.1-or-later or Apache-2.0
-  javax.inject under The Apache Software License, Version 2.0
   JAXB Core under Eclipse Distribution License - v 1.0
   JAXB Runtime under Eclipse Distribution License - v 1.0
   jaxb-api under CDDL 1.1 or GPL2 w/ CPE
   JBoss Logging 3 under Apache License 2.0
-  JCL 1.2 implemented over SLF4J under Apache License, Version 2.0
+  JCL 1.2 implemented over SLF4J under Apache-2.0
   JetBrains Java Annotations under The Apache Software License, Version 2.0
   JSON library from Android SDK under Apache License 2.0
   JSON Small and Fast Parser under The Apache Software License, Version 2.0
+  JSON-P Default Provider under Eclipse Public License 2.0 or GNU General Public License, version 2 with the GNU Classpath Exception
   json-path under The Apache Software License, Version 2.0
   JSONassert under The Apache Software License, Version 2.0
   JSpecify annotations under The Apache License, Version 2.0
-  JUL to SLF4J bridge under MIT License
+  JUL to SLF4J bridge under MIT
   JUnit under Eclipse Public License 1.0
   JUnit Jupiter (Aggregator) under Eclipse Public License v2.0
   JUnit Jupiter API under Eclipse Public License v2.0
@@ -105,19 +117,6 @@ This project includes:
   Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
   Logstash Logback Encoder under Apache License, Version 2.0 or MIT License
-  Maven Artifact under Apache-2.0
-  Maven Artifact Resolver API under Apache-2.0
-  Maven Artifact Resolver Connector Basic under Apache-2.0
-  Maven Artifact Resolver Implementation under Apache-2.0
-  Maven Artifact Resolver Named Locks under Apache-2.0
-  Maven Artifact Resolver Provider under Apache-2.0
-  Maven Artifact Resolver SPI under Apache-2.0
-  Maven Artifact Resolver Transport HTTP under Apache-2.0
-  Maven Artifact Resolver Utilities under Apache-2.0
-  Maven Builder Support under Apache-2.0
-  Maven Model under Apache-2.0
-  Maven Model Builder under Apache-2.0
-  Maven Repository Metadata Model under Apache-2.0
   micrometer-commons under The Apache Software License, Version 2.0
   micrometer-core under The Apache Software License, Version 2.0
   micrometer-jakarta9 under The Apache Software License, Version 2.0
@@ -133,13 +132,9 @@ This project includes:
   OpenTelemetry Java under The Apache License, Version 2.0
   OpenTelemetry Semantic Conventions Java under The Apache License, Version 2.0
   org.apiguardian:apiguardian-api under The Apache License, Version 2.0
-  org.eclipse.sisu.inject under Eclipse Public License, Version 2.0
-  org.hl7.fhir.r4 under Apache Software License 2.0
-  org.hl7.fhir.utilities under Apache Software License 2.0
   org.opentest4j:opentest4j under The Apache License, Version 2.0
+  org.roaringbitmap:RoaringBitmap under Apache 2
   org.xmlunit:xmlunit-core under The Apache Software License, Version 2.0
-  Plexus Common Utilities under Apache License, Version 2.0
-  Plexus Interpolation API under Apache License, Version 2.0
   PostgreSQL JDBC Driver under BSD-2-Clause
   Project Lombok under The MIT License
   Prometheus Metrics Config under The Apache Software License, Version 2.0
@@ -148,8 +143,10 @@ This project includes:
   Prometheus Metrics Exposition Text Formats under The Apache Software License, Version 2.0
   Prometheus Metrics Model under The Apache Software License, Version 2.0
   Prometheus Metrics Tracer Common under The Apache Software License, Version 2.0
+  Protocol Buffers [Core] under BSD-3-Clause
+  Saxon-HE under Mozilla Public License Version 2.0
   service-base under Licensed under the EUPL 1.2
-  SLF4J API Module under MIT License
+  SLF4J API Module under MIT
   SnakeYAML under Apache License, Version 2.0
   Spring AOP under Apache License, Version 2.0
   Spring Aspects under Apache License, Version 2.0
@@ -184,12 +181,11 @@ This project includes:
   spring-boot-test under Apache License, Version 2.0
   spring-boot-test-autoconfigure under Apache License, Version 2.0
   spring-boot-testcontainers under Apache License, Version 2.0
-  spring-cloud-contract-wiremock under Apache License, Version 2.0
-  spring-cloud-test-support under Apache License, Version 2.0
+  spring-parent under Licensed under the EUPL 1.2
   springdoc-openapi-starter-common under The Apache License, Version 2.0
   springdoc-openapi-starter-webmvc-api under The Apache License, Version 2.0
   springdoc-openapi-starter-webmvc-ui under The Apache License, Version 2.0
-  Swagger UI under Apache 2.0
+  Swagger UI under Apache-2.0
   swagger-annotations-jakarta under Apache License 2.0
   swagger-core-jakarta under Apache License 2.0
   swagger-models-jakarta under Apache License 2.0
@@ -198,11 +194,12 @@ This project includes:
   Testcontainers :: JDBC :: PostgreSQL under MIT
   Testcontainers :: JUnit Jupiter Extension under MIT
   Testcontainers Core under MIT
+  Titanium JSON-LD 1.1 (JRE11) under Apache License, Version 2.0
   tomcat-embed-core under Apache License, Version 2.0
   tomcat-embed-el under Apache License, Version 2.0
   tomcat-embed-websocket under Apache License, Version 2.0
   TXW2 Runtime under Eclipse Distribution License - v 1.0
   webjars-locator-lite under MIT
-  WireMock under The Apache Software License, Version 2.0
+  XML Resolver under Apache License version 2.0
 
 

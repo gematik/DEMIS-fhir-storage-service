@@ -19,10 +19,15 @@ package de.gematik.demis.storage.reader.bundle;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
 import static de.gematik.demis.storage.common.entity.AbstractResourceEntity.COLUMN_LAST_UPDATED;
+import static de.gematik.demis.storage.reader.test.TestUtil.paramStringToMultiValueMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,25 +38,22 @@ import static org.mockito.Mockito.when;
 
 import de.gematik.demis.service.base.error.ServiceException;
 import de.gematik.demis.storage.common.entity.BundleEntity;
-import de.gematik.demis.storage.common.reader.BundleMapper;
 import de.gematik.demis.storage.reader.common.search.Filter;
 import de.gematik.demis.storage.reader.common.search.SearchSetService;
 import de.gematik.demis.storage.reader.common.security.Caller;
 import de.gematik.demis.storage.reader.config.FssReaderConfigProperties;
 import de.gematik.demis.storage.reader.error.ErrorCode;
 import de.gematik.demis.storage.reader.test.TestData;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import org.hl7.fhir.r4.model.Bundle;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -62,9 +64,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.MultiValueMapAdapter;
-import org.springframework.util.StringUtils;
 
 @ExtendWith(MockitoExtension.class)
 class BundleReadServiceTest {
@@ -140,31 +139,13 @@ class BundleReadServiceTest {
   @Nested
   class SearchTest {
 
-    /** params separated through '&' and key value seperated through '=' */
-    private static MultiValueMap<String, String> paramStringToMultiValueMap(
-        final String paramString) {
-      final Map<String, List<String>> map;
-      if (StringUtils.hasText(paramString)) {
-        map =
-            Arrays.stream(paramString.split("&"))
-                .map(param -> param.split("="))
-                .collect(
-                    Collectors.groupingBy(
-                        param -> param[0],
-                        Collectors.mapping(param -> param[1], Collectors.toList())));
-      } else {
-        map = Map.of();
-      }
-      return new MultiValueMapAdapter<>(map);
-    }
-
     private static String toResponsibleDepartmentParameter(final String responsibleDepartment) {
       return "_tag=https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment|"
           + responsibleDepartment;
     }
 
     @Test
-    void search_okay() {
+    void searchWithoutRequestParams_okay() {
       final int pageSize = 10;
       final Set<String> profiles =
           Set.of("https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease");
@@ -199,7 +180,21 @@ class BundleReadServiceTest {
     }
 
     @Test
-    void requestOtherHealthOffice() {
+    void filterIdentifier_success() {
+      final String notificationBundleId = "123-abc-456-def";
+      final String parameter =
+          "identifier=https://demis.rki.de/fhir/NamingSystem/NotificationBundleId|"
+              + notificationBundleId;
+      final Filter expectedFilter =
+          new BundleFilter()
+              .setProfiles(AUTHORIZED_PROFILES)
+              .setNotificationBundleId(notificationBundleId);
+
+      executeFilterTest(parameter, expectedFilter, AUTHORIZED_PROFILES);
+    }
+
+    @Test
+    void requestOtherHealthOffice_success() {
       final String responsibleDepartmentInRequest = "1.01.0.53.";
       final Set<String> profiles =
           Set.of("https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease");
@@ -213,7 +208,7 @@ class BundleReadServiceTest {
     }
 
     @Test
-    void filterProfile() {
+    void filterProfile_success() {
       final String profile =
           "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease";
       final String param = "_profile=" + profile;
@@ -222,7 +217,7 @@ class BundleReadServiceTest {
     }
 
     @Test
-    void filterMultipleProfiles() {
+    void filterMultipleProfiles_success() {
       final String profile1 =
           "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease";
       final String profile2 =
@@ -233,7 +228,7 @@ class BundleReadServiceTest {
     }
 
     @Test
-    void filterUnauthorizedProfile() {
+    void filterUnauthorizedProfile_throwsException() {
       final String profile1 =
           "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease";
       final String profile2 =
@@ -255,18 +250,91 @@ class BundleReadServiceTest {
       verifyNoInteractions(bundleReadonlyRepositoryMock);
     }
 
-    @Test
-    void filterIdentifier() {
-      final String notificationBundleId = "123-abc-456-def";
-      final String parameter =
-          "identifier=https://demis.rki.de/fhir/NamingSystem/NotificationBundleId|"
-              + notificationBundleId;
-      final Filter expectedFilter =
-          new BundleFilter()
-              .setProfiles(AUTHORIZED_PROFILES)
-              .setNotificationBundleId(notificationBundleId);
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+          // system 'NotificationBundleId' is not allowed (must be full qualified)
+          "identifier=NotificationBundleId|123-abc-456-def",
+          // more than one identifier are not allowed
+          "identifier=https://demis.rki.de/fhir/NamingSystem/NotificationBundleId|123&identifier=a|2"
+        })
+    void invalidFilter_throwsException(final String parameter) {
+      final var map = paramStringToMultiValueMap(parameter);
 
-      executeFilterTest(parameter, expectedFilter, AUTHORIZED_PROFILES);
+      final ServiceException exception =
+          catchThrowableOfType(
+              ServiceException.class,
+              () -> underTest.search(createCaller(Set.of("irrelevant")), map));
+
+      assertThat(exception)
+          .isNotNull()
+          .returns(ErrorCode.INVALID_FILTER.getCode(), ServiceException::getErrorCode);
+    }
+
+    @ParameterizedTest
+    @ValueSource(
+        strings = {
+          // complex search queries are not supported
+          "composition.type=https://loinc.org|34782-3",
+          "patient.gender=male"
+        })
+    void unsupportedRequestParameter_throwsException(final String parameter) {
+      final var map = paramStringToMultiValueMap(parameter);
+
+      final ServiceException exception =
+          catchThrowableOfType(
+              ServiceException.class,
+              () -> underTest.search(createCaller(Set.of("irrelevant")), map));
+
+      assertThat(exception)
+          .isNotNull()
+          .returns(
+              ErrorCode.UNSUPPORTED_REQUEST_PARAMETER.getCode(), ServiceException::getErrorCode)
+          .returns("Unsupported request params: " + map.keySet(), ServiceException::getMessage);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"17, 34", "1, 0", "1, 1000", "100, 101"})
+    void paging_success(final int count, final int offset) {
+      final String requestParams = String.format("_count=%s&_offset=%s", count, offset);
+
+      final Filter expectedFilter = new BundleFilter().setProfiles(AUTHORIZED_PROFILES);
+      final Pageable expectedPageable =
+          PageRequest.of(offset / count, count).withSort(Direction.ASC, COLUMN_LAST_UPDATED);
+
+      final Bundle searchSetBundle = new Bundle();
+      setupSearchProps(100, 100);
+      when(bundleReadonlyRepositoryMock.search(any(Filter.class), any())).thenReturn(Page.empty());
+      when(searchSetServiceMock.createSearchSet(any())).thenReturn(searchSetBundle);
+
+      // execute
+      final Bundle result =
+          underTest.search(
+              createCaller(AUTHORIZED_PROFILES), paramStringToMultiValueMap(requestParams));
+
+      assertThat(result).isSameAs(searchSetBundle);
+      verify(bundleReadonlyRepositoryMock).search(expectedFilter, expectedPageable);
+    }
+
+    @ParameterizedTest
+    @CsvSource({"0, 10", "-1, 10", "1, -1", "-1, -1"})
+    void invalidCount_throwsException(final int count, final int offset) {
+      final var caller = createCaller(AUTHORIZED_PROFILES);
+      final var requestParams =
+          paramStringToMultiValueMap(
+              String.format(
+                  "%s&_count=%s&_offset=%s",
+                  toResponsibleDepartmentParameter(caller.getName()), count, offset));
+
+      final ServiceException exception =
+          catchThrowableOfType(
+              ServiceException.class, () -> underTest.search(caller, requestParams));
+
+      assertThat(exception)
+          .isNotNull()
+          .returns(ErrorCode.INVALID_PAGING.getCode(), ServiceException::getErrorCode);
+
+      verifyNoInteractions(bundleReadonlyRepositoryMock);
     }
 
     private void executeFilterTest(
@@ -286,48 +354,9 @@ class BundleReadServiceTest {
       verify(bundleReadonlyRepositoryMock).search(eq(expectedFilter), any());
     }
 
-    @ParameterizedTest
-    @ValueSource(
-        strings = {
-          // system 'NotificationBundleId' is not allowed (must be full qualified)
-          "identifier=NotificationBundleId|123-abc-456-def",
-          // more than one identifier are not allowed
-          "identifier=https://demis.rki.de/fhir/NamingSystem/NotificationBundleId|123&identifier=a|2"
-        })
-    void invalidFilter(final String parameter) {
-      final var map = paramStringToMultiValueMap(parameter);
-
-      final ServiceException exception =
-          catchThrowableOfType(
-              ServiceException.class, () -> underTest.search(createCaller(Set.of("profile")), map));
-
-      assertThat(exception)
-          .isNotNull()
-          .returns(ErrorCode.INVALID_FILTER.getCode(), ServiceException::getErrorCode);
-    }
-
     private void setupSearchProps(int defaultPageSize, int maxPageSize) {
       when(searchProps.defaultPageSize()).thenReturn(defaultPageSize);
       when(searchProps.maxPageSize()).thenReturn(maxPageSize);
-    }
-
-    @Test
-    void searchEmptyRequestParam() {
-      final Bundle searchSetBundle = new Bundle();
-      final Set<String> profiles =
-          Set.of("https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDisease");
-      final Filter expectedFilter = new BundleFilter().setProfiles(profiles);
-
-      setupSearchProps(1, 1);
-      when(bundleReadonlyRepositoryMock.search(any(Filter.class), any())).thenReturn(Page.empty());
-      when(searchSetServiceMock.createSearchSet(any())).thenReturn(searchSetBundle);
-
-      // execute
-      final Bundle result =
-          underTest.search(createCaller(profiles), paramStringToMultiValueMap(null));
-
-      assertThat(result).isSameAs(searchSetBundle);
-      verify(bundleReadonlyRepositoryMock).search(eq(expectedFilter), any());
     }
   }
 

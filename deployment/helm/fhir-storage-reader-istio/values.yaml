@@ -13,6 +13,11 @@ istio:
             prefix: /notification-clearing-api
       rewrite:
         uri: /notification-clearing-api
+      timeout: 50s
+      retries:
+        enable: true
+        attempts: 0
+        retryOn: null
     hosts: {}
   subsets:
     main:

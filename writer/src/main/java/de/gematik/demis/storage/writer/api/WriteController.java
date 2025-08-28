@@ -19,6 +19,10 @@ package de.gematik.demis.storage.writer.api;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -40,7 +44,7 @@ public class WriteController {
 
   @PostMapping(
       consumes = {APPLICATION_JSON_VALUE, "application/fhir+json"},
-      path = "/notification-clearing-api/fhir/")
+      path = "${fss.writer.context-path}")
   public List<String> storeFhir(@RequestBody @NotBlank final String fhirNotificationAsJson) {
     return service.store(fhirNotificationAsJson);
   }

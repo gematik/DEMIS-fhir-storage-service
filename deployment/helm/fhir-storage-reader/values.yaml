@@ -3,7 +3,7 @@ debug:
   enable: false
 
 # Number of Pod Replicas desired
-replicaCount: 1
+replicaCount: 2
 
 # Required Values for the Chart
 required:
@@ -26,8 +26,9 @@ secret:
 
 # Environment Variables to be defined
 customEnvVars:
-  DB_URL: "jdbc:postgresql://pgbouncer:5432/fhir-storage"
+  DB_URL: "jdbc:postgresql://pgbouncer.demis.svc.cluster.local/fhir-storage"
   DB_USER: fhir-storage-reader
+  FEATURE_FLAG_NEW_API_ENDPOINTS: false
 
 # Extra labels for deployments
 deploymentLabels: {}
@@ -106,10 +107,10 @@ service:
 # Default Resources
 resources:
   limits:
-    memory: "1Gi"
+    memory: "500Mi"
   requests:
-    cpu: "200m"
-    memory: "256Mi"
+    cpu: "50m"
+    memory: "500Mi"
 
 autoscaling:
   enabled: false

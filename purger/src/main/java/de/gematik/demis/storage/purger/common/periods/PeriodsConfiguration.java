@@ -19,16 +19,26 @@ package de.gematik.demis.storage.purger.common.periods;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
 import java.time.Period;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-/** Selective deletion periods configuration */
+/**
+ * Configuration of deletion/retention periods. It currently consists of the default period and
+ * individual responsible department periods. The responsible department periods are optional and
+ * most of the time not used in production.
+ */
 @ConfigurationProperties(prefix = "fss.purger.periods")
+@Slf4j
 public record PeriodsConfiguration(
-    Period defaultPeriod,
-    List<BundleProfilePeriod> bundleProfiles,
-    List<ResponsibleDepartmentPeriod> responsibleDepartments) {}
+    Period defaultPeriod, List<ResponsibleDepartmentPeriod> responsibleDepartments) {
+  // empty
+}

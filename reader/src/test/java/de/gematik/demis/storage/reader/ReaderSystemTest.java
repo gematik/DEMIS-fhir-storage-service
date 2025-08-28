@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -30,6 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;
+import de.gematik.demis.AbstractOpenApiSpecDownloaderTest;
 import de.gematik.demis.storage.reader.test.TestData;
 import de.gematik.demis.storage.reader.test.TestWithPostgresContainer;
 import java.net.URI;
@@ -183,13 +188,15 @@ class ReaderSystemTest extends TestWithPostgresContainer {
               "_lastUpdated=ge2025-01-17T14:58:48.147+01:00&_sort=_lastUpdated",
               List.of(
                   ID_2025_01_17_14_59_LABORATORY_1_01_0_53, ID_2025_01_17_15_02_LABORATORY_1_20_4)),
+          // more parameters which have no effect but were accepted:
+          // _summary, _elements, _total, _format=json (is the default)
+          Arguments.of(
+              "_lastUpdated=ge2025-01-17T14:58:48.147+01:00&_summary=text&_elements=identifier&_total=off&_format=json",
+              List.of(
+                  ID_2025_01_17_14_59_LABORATORY_1_01_0_53, ID_2025_01_17_15_02_LABORATORY_1_20_4)),
           // all from 2025-01-17 14:58 until 2025-01-17 15:02
           Arguments.of(
               "_lastUpdated=ge2025-01-17T14:58:48.147+01:00&_lastUpdated=lt2025-01-17T15:02:00.000+01:00",
-              List.of(ID_2025_01_17_14_59_LABORATORY_1_01_0_53)),
-          // parameter _summary=text has no impact
-          Arguments.of(
-              "_lastUpdated=ge2025-01-17T14:58:48.147+01:00&_lastUpdated=lt2025-01-17T15:02:00.000+01:00&_summary=text",
               List.of(ID_2025_01_17_14_59_LABORATORY_1_01_0_53)),
           // just profile disease
           Arguments.of(
@@ -238,6 +245,11 @@ class ReaderSystemTest extends TestWithPostgresContainer {
           Arguments.of(
               "_lastUpdated=ge2025-01-12T00:00:00+01:00&_sort=_lastUpdated",
               List.of(ID_2025_01_12)),
+          // more parameters which have no effect but were accepted:
+          // _summary, _elements, _total, _format=json (is the default)
+          Arguments.of(
+              "_lastUpdated=ge2025-01-12T00:00:00+01:00&_summary=text&_elements=identifier&_total=off&_format=json",
+              List.of(ID_2025_01_12)),
           // all from 2025-01-10 until 2025-01-11
           Arguments.of(
               "_lastUpdated=ge2025-01-10T00:00:00+01:00&_lastUpdated=lt2025-01-11T00:00:00+01:00",
@@ -263,9 +275,21 @@ class ReaderSystemTest extends TestWithPostgresContainer {
               "_sort=unsupported",
               "Only ascending sort by lastUpdated is allowed. Found: unsupported"),
           Arguments.of(
+              ENDPOINT_BUNDLE_SEARCH,
+              "composition.type=http://loinc.org|34782-3",
+              "Unsupported request params: [composition.type]"),
+          Arguments.of(
               ENDPOINT_BINARY_SEARCH,
               "_sort=unsupported",
-              "Only ascending sort by lastUpdated is allowed. Found: unsupported"));
+              "Only ascending sort by lastUpdated is allowed. Found: unsupported"),
+          Arguments.of(
+              ENDPOINT_BINARY_SEARCH,
+              "composition.type=http://loinc.org|34782-3",
+              "Unsupported request params: [composition.type]"),
+          Arguments.of(
+              ENDPOINT_BINARY_SEARCH,
+              "_profile=OnlyBundleSupportsProfileFilter",
+              "Unsupported request params: [_profile]"));
     }
 
     @ParameterizedTest
@@ -361,5 +385,10 @@ class ReaderSystemTest extends TestWithPostgresContainer {
       log(response);
       assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
+  }
+
+  @Nested
+  class OpenApiSpecDownloaderTest extends AbstractOpenApiSpecDownloaderTest {
+    // executes test from OpenApiSpecDownloaderTest
   }
 }

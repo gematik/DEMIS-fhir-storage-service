@@ -29,11 +29,14 @@ secret:
   key: FHIR_STORAGE_PURGER_DB_PASSWORD
   propPath: spring/datasource/password
 
+config:
+  files: {}
+
 # Extra Environment Variables to be defined
 # customEnvVars
 #   key: value
 customEnvVars:
-  DB_URL: "jdbc:postgresql://pgbouncer:5432/fhir-storage"
+  DB_URL: "jdbc:postgresql://pgbouncer.demis.svc.cluster.local/fhir-storage"
   DB_USER: fhir-storage-purger
 
 # Define custom Container Entrypoint and Arguments (e.g. JVM Tuning)
@@ -103,11 +106,10 @@ securityContext:
 # Resources
 resources:
   limits:
-    cpu: "300m"
     memory: "1Gi"
   requests:
-    cpu: "100m"
-    memory: "512Mi"
+    cpu: "400m"
+    memory: "1Gi"
 
 nodeSelector: {}
 

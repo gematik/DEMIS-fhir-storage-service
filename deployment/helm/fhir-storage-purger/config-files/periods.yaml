@@ -1,0 +1,4 @@
+fss:
+  purger:
+    periods:
+      default-period: 30d

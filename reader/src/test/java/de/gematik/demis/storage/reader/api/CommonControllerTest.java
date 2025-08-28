@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.api;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -70,20 +74,20 @@ abstract class CommonControllerTest<E extends AbstractResourceEntity, R extends 
   private static final String FORMAT_PARAM = "_format";
 
   private static final String EXPECTED_SEARCH_RESULT_JSON =
-      """
+"""
 {"resourceType":"Bundle","type":"searchset","total":0}
 """;
   private static final String EXPECTED_SEARCH_RESULT_XML =
-      """
+"""
 <Bundle xmlns="http://hl7.org/fhir"><type value="searchset"></type><total value="0"></total></Bundle>
 """;
 
   private static final String EXPECTED_ERROR_JSON =
-      """
+"""
 {"resourceType":"OperationOutcome","issue":[{"severity":"error","code":"processing","details":{"coding":[{"code":"%CODE%"}]},"diagnostics":"%MESSAGE%","location":
 """;
   private static final String EXPECTED_ERROR_XML =
-      """
+"""
 <OperationOutcome xmlns="http://hl7.org/fhir"><issue><severity value="error"></severity><code value="processing"></code><details><coding><code value="%CODE%"></code></coding></details><diagnostics value="%MESSAGE%"></diagnostics><location value=
 """;
 

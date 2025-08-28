@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.binary;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -27,7 +31,6 @@ import static de.gematik.demis.storage.reader.test.TestUtil.assertFhirResource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import de.gematik.demis.storage.common.entity.BinaryEntity;
-import de.gematik.demis.storage.common.reader.BinaryMapper;
 import de.gematik.demis.storage.reader.test.TestData;
 import org.hl7.fhir.r4.model.Binary;
 import org.junit.jupiter.api.Test;

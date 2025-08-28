@@ -19,6 +19,10 @@ package de.gematik.demis.storage.reader.binary;
  * In case of changes by gematik find details in the "Readme" file.
  *
  * See the Licence for the specific language governing permissions and limitations under the Licence.
+ *
+ * *******
+ *
+ * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
  * #L%
  */
 
@@ -26,7 +30,6 @@ import static de.gematik.demis.storage.common.fhir.DemisFhirNames.RELATED_NOTIFI
 
 import de.gematik.demis.service.base.error.ServiceException;
 import de.gematik.demis.storage.common.entity.BinaryEntity;
-import de.gematik.demis.storage.common.reader.BinaryMapper;
 import de.gematik.demis.storage.reader.common.ReadService;
 import de.gematik.demis.storage.reader.common.search.Filter;
 import de.gematik.demis.storage.reader.common.search.RequestParamFilterResolver;
@@ -42,7 +45,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class BinaryReadService extends ReadService<BinaryEntity, Binary, Filter> {
 
-  public BinaryReadService(
+  BinaryReadService(
       final BinaryReadonlyRepository repository,
       final BinaryMapper mapper,
       final SearchProps searchProps,

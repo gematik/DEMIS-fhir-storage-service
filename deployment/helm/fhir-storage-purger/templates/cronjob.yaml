@@ -40,6 +40,9 @@ spec:
             {{- end }}
           restartPolicy: OnFailure
           volumes:
+            - name: config-volume
+              configMap:
+                name: {{ include "fhir-storage-purger.fullversionname" . }}
             - name: tmp-volume
               emptyDir: {}
           {{- if .Values.debug.enable }}
@@ -92,6 +95,9 @@ spec:
             - name: secret-volume
               readOnly: true
               mountPath: "/secrets/dbPassword"
+            - name: config-volume
+              readOnly: true
+              mountPath: "/config"
             # Set the Environment Variables for the container
             env:
               - name: "TZ"
@@ -102,7 +108,7 @@ spec:
               {{- end }}
               # Set Spring Configuration Import from Folder Structure
               - name: "SPRING_CONFIG_IMPORT"
-                value: "optional:configtree:/secrets/*/"
+                value: "optional:configtree:/secrets/*/,optional:file:./config/periods.yaml"
               {{- if $customEnvVars }}
               # Custom Environment Variables
               {{- range $_, $key := keys $customEnvVars | sortAlpha }}
