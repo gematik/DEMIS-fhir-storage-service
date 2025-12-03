@@ -22,13 +22,14 @@ package de.gematik.demis.storage.reader.binary;
  *
  * *******
  *
- * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
+ * For additional notes and disclaimer from gematik and in case of changes by gematik,
+ * find details in the "Readme" file.
  * #L%
  */
 
+import de.gematik.demis.service.base.fhir.response.FhirResponseConverter;
 import de.gematik.demis.storage.reader.api.BinaryEndpoint;
 import de.gematik.demis.storage.reader.common.ReadController;
-import de.gematik.demis.storage.reader.common.fhir.FhirConverter;
 import de.gematik.demis.storage.reader.common.security.AuthorizationService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ public class BinaryReadController extends ReadController implements BinaryEndpoi
   public BinaryReadController(
       final BinaryReadService service,
       final AuthorizationService authorizationService,
-      FhirConverter fhirConverter) {
+      FhirResponseConverter fhirConverter) {
     super(service, authorizationService, fhirConverter);
   }
 }

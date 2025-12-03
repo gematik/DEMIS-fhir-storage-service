@@ -22,14 +22,15 @@ package de.gematik.demis.storage.reader.common;
  *
  * *******
  *
- * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
+ * For additional notes and disclaimer from gematik and in case of changes by gematik,
+ * find details in the "Readme" file.
  * #L%
  */
 
 import static org.springframework.http.ResponseEntity.ok;
 
+import de.gematik.demis.service.base.fhir.response.FhirResponseConverter;
 import de.gematik.demis.storage.reader.api.ResourceEndpoint;
-import de.gematik.demis.storage.reader.common.fhir.FhirConverter;
 import de.gematik.demis.storage.reader.common.security.AuthorizationService;
 import de.gematik.demis.storage.reader.common.security.Caller;
 import java.util.UUID;
@@ -47,7 +48,7 @@ public abstract class ReadController implements ResourceEndpoint {
 
   private final ReadService<?, ?, ?> service;
   private final AuthorizationService authorizationService;
-  private final FhirConverter fhirConverter;
+  private final FhirResponseConverter fhirConverter;
 
   @Override
   public ResponseEntity<Object> search(
@@ -56,7 +57,7 @@ public abstract class ReadController implements ResourceEndpoint {
       final WebRequest request) {
     final Caller caller = authorizationService.getCaller(headers);
     final Bundle result = service.search(caller, requestParams);
-    return fhirConverter.setResponseContent(ok(), result, request);
+    return fhirConverter.buildResponse(ok(), result, request);
   }
 
   @Override
@@ -64,6 +65,6 @@ public abstract class ReadController implements ResourceEndpoint {
       @RequestHeader final HttpHeaders headers, final UUID id, final WebRequest request) {
     final Caller caller = authorizationService.getCaller(headers);
     final Resource result = service.findById(caller, id);
-    return fhirConverter.setResponseContent(ok(), result, request);
+    return fhirConverter.buildResponse(ok(), result, request);
   }
 }

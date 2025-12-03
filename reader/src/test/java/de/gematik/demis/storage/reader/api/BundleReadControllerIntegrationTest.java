@@ -22,7 +22,8 @@ package de.gematik.demis.storage.reader.api;
  *
  * *******
  *
- * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
+ * For additional notes and disclaimer from gematik and in case of changes by gematik,
+ * find details in the "Readme" file.
  * #L%
  */
 
@@ -39,7 +40,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-@WebMvcTest(BundleReadController.class)
+@WebMvcTest(
+    value = BundleReadController.class,
+    properties = "feature.flag.move-error-id-to-diagnostics=true")
 class BundleReadControllerIntegrationTest extends CommonControllerTest<BundleEntity, Bundle> {
 
   private static final String BASE_PATH = "/notification-clearing-api/fhir/Bundle";

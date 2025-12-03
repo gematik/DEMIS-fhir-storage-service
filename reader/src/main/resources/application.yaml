@@ -52,3 +52,11 @@ fss:
       disease-notification-anonymous-fetcher: "https://demis.rki.de/fhir/StructureDefinition/NotificationBundleDiseaseAnonymous"
       ars-data-fetcher: "https://demis.rki.de/fhir/ars/StructureDefinition/Bundle"
 
+base:
+  fhir:
+    enabled: true
+    error-as-operation-outcome: true
+  error:
+    sender:
+      log: true
+

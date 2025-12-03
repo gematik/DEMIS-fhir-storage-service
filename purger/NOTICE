@@ -37,7 +37,6 @@ This project includes:
   fhir-storage-common under Licensed under the EUPL 1.2
   fhir-storage-purger under Licensed under the EUPL 1.2
   Hamcrest under BSD-3-Clause
-  Hamcrest Core under BSD-3-Clause
   HdrHistogram under Public Domain, per Creative Commons CC0 or BSD-2-Clause
   Hibernate Commons Annotations under Apache License Version 2.0
   Hibernate ORM - hibernate-core under GNU Library General Public License v2.1 or later
@@ -70,7 +69,6 @@ This project includes:
   JSONassert under The Apache Software License, Version 2.0
   JSpecify annotations under The Apache License, Version 2.0
   JUL to SLF4J bridge under MIT
-  JUnit under Eclipse Public License 1.0
   JUnit Jupiter (Aggregator) under Eclipse Public License v2.0
   JUnit Jupiter API under Eclipse Public License v2.0
   JUnit Jupiter Engine under Eclipse Public License v2.0

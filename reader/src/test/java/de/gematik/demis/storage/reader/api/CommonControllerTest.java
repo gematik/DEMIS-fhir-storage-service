@@ -22,7 +22,8 @@ package de.gematik.demis.storage.reader.api;
  *
  * *******
  *
- * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
+ * For additional notes and disclaimer from gematik and in case of changes by gematik,
+ * find details in the "Readme" file.
  * #L%
  */
 
@@ -38,12 +39,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import de.gematik.demis.fhirparserlibrary.MessageType;
 import de.gematik.demis.service.base.error.ServiceException;
+import de.gematik.demis.service.base.error.rest.ErrorFieldProvider;
+import de.gematik.demis.service.base.error.rest.ErrorHandlerConfiguration;
+import de.gematik.demis.service.base.fhir.FhirSupportAutoConfiguration;
+import de.gematik.demis.service.base.fhir.error.FhirErrorResponseAutoConfiguration;
 import de.gematik.demis.storage.common.entity.AbstractResourceEntity;
 import de.gematik.demis.storage.reader.common.ReadService;
-import de.gematik.demis.storage.reader.common.fhir.FhirConverter;
 import de.gematik.demis.storage.reader.common.security.AuthorizationService;
 import de.gematik.demis.storage.reader.common.security.Caller;
-import de.gematik.demis.storage.reader.config.FhirConfiguration;
 import de.gematik.demis.storage.reader.error.ErrorCode;
 import de.gematik.demis.storage.reader.test.TestData;
 import java.nio.charset.StandardCharsets;
@@ -59,15 +62,20 @@ import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Resource;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.params.provider.Arguments;
+import org.mockito.Answers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.util.MultiValueMapAdapter;
 
-@Import({FhirConverter.class, FhirConfiguration.class})
+@ImportAutoConfiguration({
+  ErrorHandlerConfiguration.class,
+  FhirSupportAutoConfiguration.class,
+  FhirErrorResponseAutoConfiguration.class
+})
 @RequiredArgsConstructor
 abstract class CommonControllerTest<E extends AbstractResourceEntity, R extends Resource> {
 
@@ -84,11 +92,11 @@ abstract class CommonControllerTest<E extends AbstractResourceEntity, R extends 
 
   private static final String EXPECTED_ERROR_JSON =
 """
-{"resourceType":"OperationOutcome","issue":[{"severity":"error","code":"processing","details":{"coding":[{"code":"%CODE%"}]},"diagnostics":"%MESSAGE%","location":
+{"resourceType":"OperationOutcome","text":{"status":"generated","div":"<div xmlns=\\"http://www.w3.org/1999/xhtml\\"></div>"},"issue":[{"severity":"error","code":"processing","details":{"coding":[{"code":"%CODE%"}]},"diagnostics":"%MESSAGE% (%ERROR_ID%)"}]}
 """;
   private static final String EXPECTED_ERROR_XML =
 """
-<OperationOutcome xmlns="http://hl7.org/fhir"><issue><severity value="error"></severity><code value="processing"></code><details><coding><code value="%CODE%"></code></coding></details><diagnostics value="%MESSAGE%"></diagnostics><location value=
+<OperationOutcome xmlns="http://hl7.org/fhir"><text><status value="generated"></status><div xmlns="http://www.w3.org/1999/xhtml"></div></text><issue><severity value="error"></severity><code value="processing"></code><details><coding><code value="%CODE%"></code></coding></details><diagnostics value="%MESSAGE% (%ERROR_ID%)"></diagnostics></issue></OperationOutcome>
 """;
 
   private final String ENDPOINT_SEARCH;
@@ -96,6 +104,9 @@ abstract class CommonControllerTest<E extends AbstractResourceEntity, R extends 
 
   @Autowired MockMvc mockMvc;
   @MockitoBean AuthorizationService authorizationServiceMock;
+
+  @MockitoBean(answers = Answers.CALLS_REAL_METHODS)
+  ErrorFieldProvider errorFieldProvider;
 
   public static Stream<Arguments> messageTypePermutation() {
     return Stream.of(
@@ -227,6 +238,9 @@ abstract class CommonControllerTest<E extends AbstractResourceEntity, R extends 
       final ResponseFormat responseFormat,
       final ServiceException exc)
       throws Exception {
+    final String errorId = UUID.randomUUID().toString();
+    mockErrorUuid(errorId);
+
     request.accept(responseFormat.acceptHeader());
     if (responseFormat.queryParam() != null) {
       request.queryParam(FORMAT_PARAM, responseFormat.queryParam());
@@ -238,7 +252,8 @@ abstract class CommonControllerTest<E extends AbstractResourceEntity, R extends 
         expectedContent
             .trim()
             .replace("%CODE%", exc.getErrorCode())
-            .replace("%MESSAGE%", exc.getMessage());
+            .replace("%MESSAGE%", exc.getMessage())
+            .replace("%ERROR_ID%", errorId);
 
     final String expectedContentType = getExpectedContentType(responseFormat.expectedMessageType());
 
@@ -248,7 +263,11 @@ abstract class CommonControllerTest<E extends AbstractResourceEntity, R extends 
             status().is(exc.getResponseStatus().value()),
             content().contentTypeCompatibleWith(expectedContentType),
             content().encoding(StandardCharsets.UTF_8),
-            content().string(Matchers.startsWith(expectedContent)));
+            content().string(expectedContent));
+  }
+
+  private void mockErrorUuid(final String errorId) {
+    when(errorFieldProvider.generateId()).thenReturn(errorId);
   }
 
   protected record ResponseFormat(

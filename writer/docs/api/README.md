@@ -7,7 +7,7 @@ All URIs are relative to *http://localhost*
 
 | Class | Method | HTTP request | Description |
 |------------ | ------------- | ------------- | -------------|
-| *WriteControllerApi* | [**storeFhir**](Apis/WriteControllerApi.md#storefhir) | **POST** /notification-clearing-api/fhir/ |  |
+| *WriteControllerApi* | [**storeFhir**](Apis/WriteControllerApi.md#storeFhir) | **POST** /notification-clearing-api/fhir/ |  |
 
 
 <a name="documentation-for-models"></a>

@@ -29,6 +29,7 @@ customEnvVars:
   DB_URL: "jdbc:postgresql://pgbouncer.demis.svc.cluster.local/fhir-storage"
   DB_USER: fhir-storage-reader
   FEATURE_FLAG_NEW_API_ENDPOINTS: false
+  FEATURE_FLAG_MOVE_ERROR_ID_TO_DIAGNOSTICS: "false"
 
 # Extra labels for deployments
 deploymentLabels: {}
