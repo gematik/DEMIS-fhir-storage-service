@@ -30,14 +30,12 @@ spec:
         metadata:
           labels:
             {{- include "fhir-storage-purger.labels" . | nindent 12 }}
-        spec:
-          metadata:
-            labels:
-              {{- include "fhir-storage-purger.labels" . | nindent 14 }}
+          annotations:
+            checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
             {{- with .Values.podAnnotations }}
-            annotations:
-              {{- toYaml . | nindent 14 }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
+        spec:
           restartPolicy: OnFailure
           volumes:
             - name: config-volume

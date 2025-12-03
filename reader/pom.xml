@@ -6,12 +6,12 @@
     <parent>
         <groupId>de.gematik.demis</groupId>
         <artifactId>fhir-storage-service</artifactId>
-        <version>1.3.0-SNAPSHOT</version>
+        <version>1.3.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>fhir-storage-reader</artifactId>
-    <version>1.3.0-SNAPSHOT</version>
+    <version>1.3.1-SNAPSHOT</version>
     <name>fhir-storage-reader</name>
     <packaging>jar</packaging>
     <description>DEMIS Service for reading FHIR bundle Resources</description>
@@ -40,6 +40,13 @@
                 <groupId>org.checkerframework</groupId>
                 <artifactId>checker-qual</artifactId>
                 <version>${checker-qual.version}</version>
+            </dependency>
+            <dependency>
+                <!-- remove when spring-boot-testcontainers uses version >= 2.0.2 -->
+                <!-- fixes issue with docker env https://github.com/testcontainers/testcontainers-java/issues/11212 -->
+                <groupId>org.testcontainers</groupId>
+                <artifactId>testcontainers</artifactId>
+                <version>${testcontainers.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -92,7 +99,6 @@
             <artifactId>postgresql</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

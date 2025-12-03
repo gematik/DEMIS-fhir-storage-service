@@ -2,6 +2,12 @@
  
 # Release notes
 
+## Release 1.3.1
+- purger: add configmap checksum as annotation to force pod restart on configmap change
+- updated dependencies
+- error id in operation-outcome moved from location to diagnostics (FEATURE_FLAG_MOVE_ERROR_ID_TO_DIAGNOSTICS)
+- fixed purger pod annotations in helmchart
+
 ## Release 1.3.0
 - Updated base image to gematik1/osadl-alpine-openjdk21-jre:1.0.3
 - add support for new API Endpoints

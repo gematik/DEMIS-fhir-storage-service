@@ -22,13 +22,14 @@ package de.gematik.demis.storage.reader.bundle;
  *
  * *******
  *
- * For additional notes and disclaimer from gematik and in case of changes by gematik find details in the "Readme" file.
+ * For additional notes and disclaimer from gematik and in case of changes by gematik,
+ * find details in the "Readme" file.
  * #L%
  */
 
+import de.gematik.demis.service.base.fhir.response.FhirResponseConverter;
 import de.gematik.demis.storage.reader.api.BundleEndpoint;
 import de.gematik.demis.storage.reader.common.ReadController;
-import de.gematik.demis.storage.reader.common.fhir.FhirConverter;
 import de.gematik.demis.storage.reader.common.security.AuthorizationService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +39,7 @@ public class BundleReadController extends ReadController implements BundleEndpoi
   public BundleReadController(
       final BundleReadService service,
       final AuthorizationService authorizationService,
-      final FhirConverter fhirConverter) {
+      final FhirResponseConverter fhirConverter) {
     super(service, authorizationService, fhirConverter);
   }
 }
