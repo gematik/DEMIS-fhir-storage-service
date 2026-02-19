@@ -4,7 +4,7 @@ package de.gematik.demis.storage.reader;
  * #%L
  * fhir-storage-reader
  * %%
- * Copyright (C) 2025 gematik GmbH
+ * Copyright (C) 2025 - 2026 gematik GmbH
  * %%
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the
  * European Commission – subsequent versions of the EUPL (the "Licence").
@@ -69,10 +69,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 @ActiveProfiles("test")
 @Slf4j
 class ReaderSystemTest extends TestWithPostgresContainer {
-  private static final String ENDPOINT_BUNDLE_SEARCH = "/notification-clearing-api/fhir/Bundle";
-  private static final String ENDPOINT_BINARY_SEARCH = "/notification-clearing-api/fhir/Binary";
-  private static final String ENDPOINT_BUNDLE_ID = "/notification-clearing-api/fhir/Bundle/{id}";
-  private static final String ENDPOINT_BINARY_ID = "/notification-clearing-api/fhir/Binary/{id}";
+  private static final String ENDPOINT_BUNDLE_SEARCH = "/Bundle";
+  private static final String ENDPOINT_BINARY_SEARCH = "/Binary";
+  private static final String ENDPOINT_BUNDLE_ID = "/Bundle/{id}";
+  private static final String ENDPOINT_BINARY_ID = "/Binary/{id}";
 
   @Autowired private TestRestTemplate restTemplate;
 

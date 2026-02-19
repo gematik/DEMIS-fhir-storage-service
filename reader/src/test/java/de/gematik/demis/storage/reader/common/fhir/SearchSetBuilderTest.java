@@ -4,7 +4,7 @@ package de.gematik.demis.storage.reader.common.fhir;
  * #%L
  * fhir-storage-reader
  * %%
- * Copyright (C) 2025 gematik GmbH
+ * Copyright (C) 2025 - 2026 gematik GmbH
  * %%
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the
  * European Commission – subsequent versions of the EUPL (the "Licence").
@@ -48,13 +48,13 @@ class SearchSetBuilderTest {
   "total": 5,
   "link": [ {
     "relation": "self",
-    "url": "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2"
+    "url": "https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2"
   }, {
     "relation": "next",
-    "url": "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2"
+    "url": "https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2"
   } ],
   "entry": [ {
-    "fullUrl": "https://demis.de/notification-clearing-api/fhir/Bundle/Test-1",
+    "fullUrl": "https://demis.de/Bundle/Test-1",
     "resource": {
       "resourceType": "Bundle",
       "id": "Test-1",
@@ -67,7 +67,7 @@ class SearchSetBuilderTest {
       "mode": "match"
     }
   }, {
-    "fullUrl": "https://demis.de/notification-clearing-api/fhir/Bundle/Test-2",
+    "fullUrl": "https://demis.de/Bundle/Test-2",
     "resource": {
       "resourceType": "Bundle",
       "id": "Test-2",
@@ -145,11 +145,9 @@ class SearchSetBuilderTest {
         .setResources(resources)
         .setLastUpdated(lastUpdated)
         .setTotalElements(5)
-        .setResourceBaseUrl("https://demis.de/notification-clearing-api/fhir")
-        .setSelfLink(
-            "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2")
-        .setNextLink(
-            "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2");
+        .setResourceBaseUrl("https://demis.de/")
+        .setSelfLink("https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2")
+        .setNextLink("https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2");
 
     final Bundle searchSetBundle = underTest.build();
 

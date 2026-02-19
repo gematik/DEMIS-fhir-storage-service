@@ -4,7 +4,7 @@ package de.gematik.demis.storage.reader.common.search;
  * #%L
  * fhir-storage-reader
  * %%
- * Copyright (C) 2025 gematik GmbH
+ * Copyright (C) 2025 - 2026 gematik GmbH
  * %%
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the
  * European Commission – subsequent versions of the EUPL (the "Licence").
@@ -57,13 +57,13 @@ class SearchSetServiceTest {
       "total": 5,
       "link": [ {
         "relation": "self",
-        "url": "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2"
+        "url": "https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2"
       }, {
         "relation": "next",
-        "url": "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2"
+        "url": "https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2"
       } ],
       "entry": [ {
-        "fullUrl": "https://demis.de/notification-clearing-api/fhir/Bundle/Test-1",
+        "fullUrl": "https://demis.de/Bundle/Test-1",
         "resource": {
           "resourceType": "Bundle",
           "id": "Test-1",
@@ -76,7 +76,7 @@ class SearchSetServiceTest {
           "mode": "match"
         }
       }, {
-        "fullUrl": "https://demis.de/notification-clearing-api/fhir/Bundle/Test-2",
+        "fullUrl": "https://demis.de/Bundle/Test-2",
         "resource": {
           "resourceType": "Bundle",
           "id": "Test-2",
@@ -117,7 +117,7 @@ class SearchSetServiceTest {
   "total": 0,
   "link": [ {
     "relation": "self",
-    "url": "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2"
+    "url": "https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2"
   } ]
 }
 """;
@@ -136,12 +136,11 @@ class SearchSetServiceTest {
 
   @BeforeEach
   void setupService() {
-    final var requestUrl =
-        "http://localhost:9091/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2";
+    final var requestUrl = "http://localhost:9091/Bundle?_lastUpdated=gt2024-01-01&_count=2";
 
     setupSelfLink(requestUrl);
     underTest.setServerUrl("https://demis.de");
-    underTest.setContextPath("/notification-clearing-api/fhir");
+    underTest.setContextPath("/");
   }
 
   @Test
@@ -158,12 +157,9 @@ class SearchSetServiceTest {
 
   @Test
   void middlePageWithNextAndPreviousLinks() {
-    final String self =
-        "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2";
-    final String next =
-        "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=4";
-    final String prev =
-        "https://demis.de/notification-clearing-api/fhir/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=0";
+    final String self = "https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=2";
+    final String next = "https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=4";
+    final String prev = "https://demis.de/Bundle?_lastUpdated=gt2024-01-01&_count=2&_offset=0";
     final String expectedLinks = LINKS_TEMPLATE.formatted(self, next, prev);
     setupSelfLink(self);
 
@@ -198,9 +194,8 @@ class SearchSetServiceTest {
   @Test
   void cleanLink() {
     final String requestUrl =
-        "https://demis.de/notification-clearing-api/fhir/Bundle?_format=json&_format=json&_format=json&_profile=a&_profile=b&_pretty=true&_count=2";
-    final String cleanedUri =
-        "https://demis.de/notification-clearing-api/fhir/Bundle?_format=json&_profile=a&_profile=b&_count=2";
+        "https://demis.de/Bundle?_format=json&_format=json&_format=json&_profile=a&_profile=b&_pretty=true&_count=2";
+    final String cleanedUri = "https://demis.de/Bundle?_format=json&_profile=a&_profile=b&_count=2";
     final String expectedLinks =
         LINKS_TEMPLATE.formatted(cleanedUri, cleanedUri + "&_offset=4", cleanedUri + "&_offset=0");
     setupSelfLink(requestUrl);

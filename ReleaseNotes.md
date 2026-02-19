@@ -2,6 +2,12 @@
  
 # Release notes
 
+## Release 1.3.2
+- updated spring-parent to 2.14.20
+- removed FEATURE_FLAG_NEW_API_ENDPOINTS
+- removed all legacy NCAPI references
+- updated base-image
+
 ## Release 1.3.1
 - purger: add configmap checksum as annotation to force pod restart on configmap change
 - updated dependencies

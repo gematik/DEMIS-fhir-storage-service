@@ -35,7 +35,6 @@ customEnvVars:
   DB_USER: fhir-storage-writer
   SPRING_LIQUIBASE_ENABLED: false
   SPRING_LIQUIBASE_USER: fhir-storage-writer-ddl
-  FEATURE_FLAG_NEW_API_ENDPOINTS: false
 
 # Extra labels for deployments
 deploymentLabels: {}

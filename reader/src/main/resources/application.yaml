@@ -28,7 +28,7 @@ spring:
 fss:
   reader:
     server-url: ${EXTERNAL_SERVER_URL:http://localhost:${server.port:8080}}
-    context-path: ${API_ENTRYPOINT:/notification-clearing-api/fhir/} # The API_ENTRYPOINT for the FHIR API is set to / if FEATURE_FLAG_NEW_API_ENDPOINTS=true
+    context-path: ${API_ENTRYPOINT:/}
   search:
     max-page-size: 200
     default-page-size: 50

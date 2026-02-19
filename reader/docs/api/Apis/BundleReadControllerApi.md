@@ -4,8 +4,8 @@ All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**findById**](BundleReadControllerApi.md#findById) | **GET** /notification-clearing-api/fhir/Bundle/{id} |  |
-| [**search**](BundleReadControllerApi.md#search) | **GET** /notification-clearing-api/fhir/Bundle |  |
+| [**findById**](BundleReadControllerApi.md#findById) | **GET** /Bundle/{id} |  |
+| [**search**](BundleReadControllerApi.md#search) | **GET** /Bundle |  |
 
 
 <a name="findById"></a>

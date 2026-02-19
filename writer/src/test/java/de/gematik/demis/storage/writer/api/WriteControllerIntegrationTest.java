@@ -4,7 +4,7 @@ package de.gematik.demis.storage.writer.api;
  * #%L
  * fhir-storage-writer
  * %%
- * Copyright (C) 2025 gematik GmbH
+ * Copyright (C) 2025 - 2026 gematik GmbH
  * %%
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the
  * European Commission – subsequent versions of the EUPL (the "Licence").
@@ -55,7 +55,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(WriteController.class)
 @Import(ErrorHandlerConfiguration.class)
 class WriteControllerIntegrationTest {
-  private static final String ENDPOINT = "/notification-clearing-api/fhir/";
+  private static final String ENDPOINT = "/";
 
   private static final String FHIR_INPUT = "does not matter";
   @MockitoBean WriteService writeService;
