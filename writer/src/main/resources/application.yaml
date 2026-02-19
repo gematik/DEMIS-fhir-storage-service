@@ -31,4 +31,4 @@ spring:
 
 fss:
   writer:
-    context-path: ${API_ENTRYPOINT:/notification-clearing-api/fhir/} # The API_ENTRYPOINT for the FHIR API is set to / if FEATURE_FLAG_NEW_API_ENDPOINTS=true
+    context-path: ${API_ENTRYPOINT:/}

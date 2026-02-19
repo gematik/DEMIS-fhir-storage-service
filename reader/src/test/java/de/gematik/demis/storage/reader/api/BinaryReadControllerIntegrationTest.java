@@ -4,7 +4,7 @@ package de.gematik.demis.storage.reader.api;
  * #%L
  * fhir-storage-reader
  * %%
- * Copyright (C) 2025 gematik GmbH
+ * Copyright (C) 2025 - 2026 gematik GmbH
  * %%
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the
  * European Commission – subsequent versions of the EUPL (the "Licence").
@@ -43,7 +43,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
     properties = "feature.flag.move-error-id-to-diagnostics=true")
 class BinaryReadControllerIntegrationTest extends CommonControllerTest<BinaryEntity, Binary> {
 
-  private static final String BASE_PATH = "/notification-clearing-api/fhir/Binary";
+  private static final String BASE_PATH = "/Binary";
   private static final String ENDPOINT_FIND_BY_ID = BASE_PATH + "/{id}";
   private static final String ENDPOINT_SEARCH = BASE_PATH;
 

@@ -4,7 +4,7 @@ All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**storeFhir**](WriteControllerApi.md#storeFhir) | **POST** /notification-clearing-api/fhir/ |  |
+| [**storeFhir**](WriteControllerApi.md#storeFhir) | **POST** / |  |
 
 
 <a name="storeFhir"></a>

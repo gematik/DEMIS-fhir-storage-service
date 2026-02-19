@@ -4,7 +4,7 @@ package de.gematik.demis.storage.writer;
  * #%L
  * fhir-storage-writer
  * %%
- * Copyright (C) 2025 gematik GmbH
+ * Copyright (C) 2025 - 2026 gematik GmbH
  * %%
  * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the
  * European Commission – subsequent versions of the EUPL (the "Licence").
@@ -80,7 +80,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Slf4j
 class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
 
-  private static final String ENDPOINT = "/notification-clearing-api/fhir/";
+  private static final String ENDPOINT = "/";
 
   private static final String TRACE_ID = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
   private static final String EXPECTED_TRACE_ID = TRACE_ID.split("-")[1];

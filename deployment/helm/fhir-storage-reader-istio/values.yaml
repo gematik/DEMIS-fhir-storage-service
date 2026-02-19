@@ -10,9 +10,9 @@ istio:
     http:
       match:
         - uri:
-            prefix: /notification-clearing-api
+            prefix: /
       rewrite:
-        uri: /notification-clearing-api
+        uri: /
       timeout: 50s
       retries:
         enable: true

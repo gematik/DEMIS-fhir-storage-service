@@ -6,12 +6,12 @@
     <parent>
         <groupId>de.gematik.demis</groupId>
         <artifactId>fhir-storage-service</artifactId>
-        <version>1.3.1-SNAPSHOT</version>
+        <version>1.3.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>fhir-storage-common</artifactId>
-    <version>1.3.1-SNAPSHOT</version>
+    <version>1.3.2-SNAPSHOT</version>
     <name>fhir-storage-common</name>
     <packaging>jar</packaging>
     <description>Definition of common resources for the Fhir Storage Services</description>

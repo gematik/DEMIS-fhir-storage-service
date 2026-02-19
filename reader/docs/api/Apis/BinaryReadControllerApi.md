@@ -4,8 +4,8 @@ All URIs are relative to *http://localhost*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**findById1**](BinaryReadControllerApi.md#findById1) | **GET** /notification-clearing-api/fhir/Binary/{id} |  |
-| [**search1**](BinaryReadControllerApi.md#search1) | **GET** /notification-clearing-api/fhir/Binary |  |
+| [**findById1**](BinaryReadControllerApi.md#findById1) | **GET** /Binary/{id} |  |
+| [**search1**](BinaryReadControllerApi.md#search1) | **GET** /Binary |  |
 
 
 <a name="findById1"></a>

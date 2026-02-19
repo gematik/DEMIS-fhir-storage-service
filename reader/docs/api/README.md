@@ -7,10 +7,10 @@ All URIs are relative to *http://localhost*
 
 | Class | Method | HTTP request | Description |
 |------------ | ------------- | ------------- | -------------|
-| *BinaryReadControllerApi* | [**findById1**](Apis/BinaryReadControllerApi.md#findById1) | **GET** /notification-clearing-api/fhir/Binary/{id} |  |
-*BinaryReadControllerApi* | [**search1**](Apis/BinaryReadControllerApi.md#search1) | **GET** /notification-clearing-api/fhir/Binary |  |
-| *BundleReadControllerApi* | [**findById**](Apis/BundleReadControllerApi.md#findById) | **GET** /notification-clearing-api/fhir/Bundle/{id} |  |
-*BundleReadControllerApi* | [**search**](Apis/BundleReadControllerApi.md#search) | **GET** /notification-clearing-api/fhir/Bundle |  |
+| *BinaryReadControllerApi* | [**findById1**](Apis/BinaryReadControllerApi.md#findById1) | **GET** /Binary/{id} |  |
+*BinaryReadControllerApi* | [**search1**](Apis/BinaryReadControllerApi.md#search1) | **GET** /Binary |  |
+| *BundleReadControllerApi* | [**findById**](Apis/BundleReadControllerApi.md#findById) | **GET** /Bundle/{id} |  |
+*BundleReadControllerApi* | [**search**](Apis/BundleReadControllerApi.md#search) | **GET** /Bundle |  |
 
 
 <a name="documentation-for-models"></a>

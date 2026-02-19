@@ -39,10 +39,10 @@ SearchSet
   "total": 12,
   "link": [ {
     "relation": "self",
-    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_lastUpdated=ge2023-01-14"
+    "url": "https://ingress.local/Bundle?_lastUpdated=ge2023-01-14"
   } ],
   "entry": [ {
-    "fullUrl": "https://ingress.local/notification-clearing-api/fhir/Bundle/1",
+    "fullUrl": "https://ingress.local/Bundle/1",
     "resource": {
       "resourceType": "Bundle",
       "id": "1",
@@ -82,7 +82,7 @@ SearchSet
     }
   },
   {
-    "fullUrl": "https://ingress.local/notification-clearing-api/fhir/Bundle/3",
+    "fullUrl": "https://ingress.local/Bundle/3",
     "resource": {
     },
     "search": {
@@ -103,7 +103,7 @@ No Matches:
   "total": 0,
   "link": [ {
     "relation": "self",
-    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_lastUpdated=ge2025-01-14"
+    "url": "https://ingress.local/Bundle?_lastUpdated=ge2025-01-14"
   } ]
 }
 
@@ -113,17 +113,17 @@ _count=11
   "total": 12,
   "link": [ {
     "relation": "self",
-    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_count=11&_lastUpdated=gt2023-01-14&_sort=_lastUpdated"
+    "url": "https://ingress.local/Bundle?_count=11&_lastUpdated=gt2023-01-14&_sort=_lastUpdated"
   }, {
     "relation": "next",
-    "url": "https://ingress.local/notification-clearing-api/fhir?_getpages=f839c87c-dca3-461e-8170-8d4cc43af040&_getpagesoffset=11&_count=11&_pretty=true&_bundletype=searchset"
+    "url": "https://ingress.local?_getpages=f839c87c-dca3-461e-8170-8d4cc43af040&_getpagesoffset=11&_count=11&_pretty=true&_bundletype=searchset"
   } ],
 
 falls count > total, dann fällt next relation weg
   "total": 12,
   "link": [ {
     "relation": "self",
-    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_count=13&_lastUpdated=gt2023-01-14&_sort=_lastUpdated"
+    "url": "https://ingress.local/Bundle?_count=13&_lastUpdated=gt2023-01-14&_sort=_lastUpdated"
   } ],
 
 
@@ -214,7 +214,7 @@ curl --location 'localhost:9091/fhir/Bundle?_tag=https%3A%2F%2Fdemis.rki.de%2Ffh
   "total": 0,
   "link": [ {
     "relation": "self",
-    "url": "https://ingress.local/notification-clearing-api/fhir/Bundle?_count=13&_lastUpdated=gt2023-01-14&_lastUpdated2=&_sort=_lastUpdated&_tag=https%3A%2F%2Fdemis.rki.de%2Ffhir%2FCodeSystem%2FResponsibleDepartment%7C1.01.0.53.&_tag=https%3A%2F%2Fdemis.rki.de%2Ffhir%2FCodeSystem%2FRelatedNotificationBundle%7C12345"
+    "url": "https://ingress.local/Bundle?_count=13&_lastUpdated=gt2023-01-14&_lastUpdated2=&_sort=_lastUpdated&_tag=https%3A%2F%2Fdemis.rki.de%2Ffhir%2FCodeSystem%2FResponsibleDepartment%7C1.01.0.53.&_tag=https%3A%2F%2Fdemis.rki.de%2Ffhir%2FCodeSystem%2FRelatedNotificationBundle%7C12345"
   } ]
 }
 
