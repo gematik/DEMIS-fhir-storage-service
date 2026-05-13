@@ -53,7 +53,7 @@ This project includes:
   docker-java-transport-zerodep under The Apache Software License, Version 2.0
   Duct Tape under MIT
   error-prone annotations under Apache 2.0
-  fhir-parser-library under Licensed under the EUPL 1.2
+  fhir-parser-library under EUPL-1.2
   fhir-storage-common under Licensed under the EUPL 1.2
   fhir-storage-writer under Licensed under the EUPL 1.2
   FindBugs-jsr305 under The Apache Software License, Version 2.0
@@ -115,8 +115,8 @@ This project includes:
   LatencyUtils under Public Domain, per Creative Commons CC0
   Liquibase under Apache License, Version 2.0
   Log4j API to SLF4J Adapter under Apache-2.0
-  Logback Classic Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
-  Logback Core Module under Eclipse Public License - v 1.0 or GNU Lesser General Public License
+  Logback Classic Module under Eclipse Public License - v 2.0 or GNU Lesser General Public License
+  Logback Core Module under Eclipse Public License - v 2.0 or GNU Lesser General Public License
   Logstash Logback Encoder under Apache License, Version 2.0 or MIT License
   micrometer-commons under The Apache Software License, Version 2.0
   micrometer-core under The Apache Software License, Version 2.0
@@ -146,7 +146,7 @@ This project includes:
   Prometheus Metrics Tracer Common under The Apache Software License, Version 2.0
   Protocol Buffers [Core] under BSD-3-Clause
   Saxon-HE under Mozilla Public License Version 2.0
-  service-base under Licensed under the EUPL 1.2
+  service-base under EUPL-1.2
   SLF4J API Module under MIT
   SnakeYAML under Apache License, Version 2.0
   Spring AOP under Apache License, Version 2.0
@@ -182,7 +182,7 @@ This project includes:
   spring-boot-test under Apache License, Version 2.0
   spring-boot-test-autoconfigure under Apache License, Version 2.0
   spring-boot-testcontainers under Apache License, Version 2.0
-  spring-parent under Licensed under the EUPL 1.2
+  spring-parent under EUPL-1.2
   springdoc-openapi-starter-common under The Apache License, Version 2.0
   springdoc-openapi-starter-webmvc-api under The Apache License, Version 2.0
   springdoc-openapi-starter-webmvc-ui under The Apache License, Version 2.0

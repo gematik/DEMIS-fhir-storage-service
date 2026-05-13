@@ -1,6 +1,10 @@
 <img align="right" width="250" height="47" src="media/Gematik_Logo_Flag.png" alt="gematik GmbH Logo"/> <br/> 
  
 # Release notes
+## Release 1.4.0 
+- updated base-image and updated from java 21 to java 25
+- Removed istio helm chart
+- decreased MaxRAMPercentage from 80% to 65%
 
 ## Release 1.3.2
 - updated spring-parent to 2.14.20
