@@ -36,7 +36,6 @@ import static de.gematik.demis.storage.reader.api.ParameterNames.PARAM_SORT_DESC
 import static de.gematik.demis.storage.reader.error.ErrorCode.RESOURCE_NOT_FOUND;
 import static java.util.Optional.ofNullable;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.gematik.demis.storage.common.entity.AbstractResourceEntity;
 import de.gematik.demis.storage.reader.common.search.Filter;
 import de.gematik.demis.storage.reader.common.search.RequestParamFilterResolver;
@@ -59,6 +58,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.MultiValueMap;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -76,6 +77,8 @@ public abstract class ReadService<
   private final SearchProps searchProps;
   private final SearchSetService searchSetService;
   private final SortResolver sortResolver = new SortResolver();
+  private final JsonMapper jsonMapper =
+      JsonMapper.builder().disable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY).build();
 
   private static Integer toInteger(final String s) {
     return s == null ? null : Integer.valueOf(s);
@@ -134,7 +137,7 @@ public abstract class ReadService<
         final Map<String, Object> queryResult = new LinkedHashMap<>();
         queryResult.put("query", query);
         queryResult.put("result", result);
-        QUERY_RESULT_LOGGER.info(new ObjectMapper().writeValueAsString(queryResult));
+        QUERY_RESULT_LOGGER.info(jsonMapper.writeValueAsString(queryResult));
       } catch (Exception e) {
         log.warn("Failed to log query result", e);
       }

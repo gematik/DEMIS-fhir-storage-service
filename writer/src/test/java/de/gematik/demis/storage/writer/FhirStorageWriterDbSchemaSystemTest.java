@@ -35,6 +35,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.UseMainMethod.ALWAYS;
 
 import de.gematik.demis.storage.common.entity.AbstractResourceEntity;
+import de.gematik.demis.storage.common.entity.BundleEntity;
 import de.gematik.demis.storage.writer.test.TestWithPostgresContainer;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
@@ -115,5 +116,23 @@ class FhirStorageWriterDbSchemaSystemTest extends TestWithPostgresContainer {
         .isNotNull()
         .isNotEqualTo(uncompressedContent)
         .hasSizeLessThan(uncompressedContent.length);
+  }
+
+  @Test
+  void jsonbColumnStoresNoNullValues() {
+    final String expectedJsonString =
+"""
+[{"code": "1.01.0.53.", "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment"}, {"code": "1.11.0.11.01.", "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier"}, {"code": "1a3a16aa-64e0-5eb1-8601-018fc3794b6e", "system": "https://demis.rki.de/fhir/CodeSystem/RelatedNotificationBundle", "display": "Relates to message with identifier: 1a3a16aa-64e0-5eb1-8601-018fc3794b6e"}]
+""";
+    final BundleEntity entity = createBundleEntity();
+    entityManager.persist(entity);
+    entityManager.flush();
+
+    final Query query =
+        entityManager.createNativeQuery("select tags::text from bundles where id = ?1");
+    query.setParameter(1, entity.getId());
+    final String tagsJson = (String) query.getSingleResult();
+
+    assertThat(tagsJson).isEqualToNormalizingWhitespace(expectedJsonString);
   }
 }

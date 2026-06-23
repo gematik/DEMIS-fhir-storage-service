@@ -91,7 +91,7 @@ class SimpleJpaRepositoryWithSqlSupportTest {
     assertSql(
         "select * from bundles where my_first_col = ? and my_second_col = ?::jsonb order by my_sort_col ASC");
 
-    assertParameters(query, "my-value", "[{\"system\":\"my-system\",\"code\":\"my-code\"}]");
+    assertParameters(query, "my-value", "[{\"code\":\"my-code\",\"system\":\"my-system\"}]");
   }
 
   private static void assertParameters(final Query query, Object... expectedValues) {

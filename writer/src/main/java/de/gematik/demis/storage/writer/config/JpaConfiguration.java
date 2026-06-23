@@ -29,7 +29,7 @@ package de.gematik.demis.storage.writer.config;
 
 import de.gematik.demis.storage.common.entity.BinaryEntity;
 import de.gematik.demis.storage.common.entity.BundleEntity;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.Configuration;
 
 @EntityScan(basePackageClasses = {BundleEntity.class, BinaryEntity.class})

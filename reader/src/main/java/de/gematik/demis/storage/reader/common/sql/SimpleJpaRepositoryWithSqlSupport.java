@@ -28,8 +28,6 @@ package de.gematik.demis.storage.reader.common.sql;
  */
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.Table;
@@ -42,12 +40,17 @@ import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.data.jpa.support.PageableUtils;
 import org.springframework.data.support.PageableExecutionUtils;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.json.JsonMapper;
 
 public class SimpleJpaRepositoryWithSqlSupport<T, I> extends SimpleJpaRepository<T, I>
     implements SqlRepository<T> {
 
-  private static final ObjectMapper OBJECT_MAPPER =
-      new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL);
+  private static final JsonMapper OBJECT_MAPPER =
+      JsonMapper.builder()
+          .changeDefaultPropertyInclusion(
+              include -> include.withValueInclusion(JsonInclude.Include.NON_NULL))
+          .build();
 
   private final EntityManager entityManager;
 
@@ -111,7 +114,7 @@ public class SimpleJpaRepositoryWithSqlSupport<T, I> extends SimpleJpaRepository
   private static String toJson(final Object value) {
     try {
       return OBJECT_MAPPER.writeValueAsString(value);
-    } catch (final JsonProcessingException e) {
+    } catch (final JacksonException e) {
       throw new IllegalArgumentException("error converting parameter value to json: " + value, e);
     }
   }

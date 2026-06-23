@@ -8,6 +8,11 @@ logging:
 spring:
   jpa:
     generate-ddl: true
+    properties:
+      hibernate:
+        query:
+          immutable_entity_update_query_handling_mode: allow
+
   sql:
     init:
       mode: never

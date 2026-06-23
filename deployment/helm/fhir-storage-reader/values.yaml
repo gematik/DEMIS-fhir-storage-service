@@ -1,6 +1,7 @@
 # Default values for fhir-storage-reader.
 debug:
   enable: false
+  params: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9000"
 
 # Number of Pod Replicas desired
 replicaCount: 2
@@ -26,6 +27,8 @@ secret:
 
 # Environment Variables to be defined
 customEnvVars:
+  TZ: "Europe/Berlin"
+  JAVA_TOOL_OPTIONS: "-XX:ActiveProcessorCount=2 -XX:MaxRAMPercentage=50.0 -XX:MaxMetaspaceSize=160m -XX:+UseG1GC"
   DB_URL: "jdbc:postgresql://pgbouncer.demis.svc.cluster.local/fhir-storage"
   DB_USER: fhir-storage-reader
   FEATURE_FLAG_MOVE_ERROR_ID_TO_DIAGNOSTICS: "false"
@@ -36,8 +39,8 @@ deploymentLabels: {}
 # Define custom Container Entrypoint and Arguments (e.g. JVM Tuning)
 # If not given, the Entrypoint defined in Dockerfile will be used
 application:
-  entrypoint: ["java"]
-  parameters: ["-XX:ActiveProcessorCount=2", "-XX:MaxRAMPercentage=65.0", "-XX:+TieredCompilation", "-XX:+UseG1GC", "-jar", "/app.jar"]
+  entrypoint: []
+  parameters: []
 
 # Define Image Pull Secrets if using private registry
 imagePullSecrets: []
@@ -107,10 +110,10 @@ service:
 # Default Resources
 resources:
   limits:
-    memory: "500Mi"
+    memory: "600Mi"
   requests:
     cpu: "50m"
-    memory: "500Mi"
+    memory: "600Mi"
 
 autoscaling:
   enabled: false

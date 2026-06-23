@@ -74,7 +74,7 @@ public class AuthorizationService {
   private Token tokenFromHeaders(final HttpHeaders headers) {
     try {
       return new TokenFactory(headers).get();
-    } catch (IllegalArgumentException e) {
+    } catch (IllegalArgumentException _) {
       throw ErrorCode.FORBIDDEN.exception("Invalid Authorization header");
     }
   }

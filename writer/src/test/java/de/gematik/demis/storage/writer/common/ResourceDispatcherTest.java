@@ -83,8 +83,8 @@ class ResourceDispatcherTest {
     final var patient = new Patient();
     final ServiceException exception =
         catchThrowableOfType(
-            () -> underTest.dispatchResourceAction(patient, ResourceProcessor::createEntity),
-            ServiceException.class);
+            ServiceException.class,
+            () -> underTest.dispatchResourceAction(patient, ResourceProcessor::createEntity));
 
     assertThat(exception)
         .isNotNull()

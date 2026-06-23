@@ -67,7 +67,7 @@ class BundleProcessorTest {
   void invalidBundleType() {
     final Bundle bundle = new Bundle().setType(TRANSACTION);
     final ServiceException exception =
-        catchThrowableOfType(() -> underTest.validate(bundle), ServiceException.class);
+        catchThrowableOfType(ServiceException.class, () -> underTest.validate(bundle));
 
     assertThat(exception)
         .isNotNull()

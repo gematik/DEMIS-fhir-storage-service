@@ -35,8 +35,6 @@ import static de.gematik.demis.storage.writer.test.TestData.readResourceAsString
 import static de.gematik.demis.storage.writer.test.TestData.resourceToJsonString;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.gematik.demis.AbstractOpenApiSpecDownloaderTest;
 import de.gematik.demis.service.base.error.rest.api.ErrorDTO;
 import de.gematik.demis.storage.common.entity.AbstractResourceEntity;
@@ -63,20 +61,23 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
+import org.springframework.boot.micrometer.tracing.test.autoconfigure.AutoConfigureTracing;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+import tools.jackson.databind.json.JsonMapper;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureObservability
 @ActiveProfiles("test")
+@AutoConfigureTracing
+@AutoConfigureTestRestTemplate
 @Slf4j
 class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
 
@@ -88,7 +89,7 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
   private static final String VALID_BUNDLE_JSON = readResourceAsString(BUNDLE_DOCUMENT_FHIR_JSON);
 
   @Autowired private TestRestTemplate restTemplate;
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired private JsonMapper objectMapper;
   @Autowired private EntityManager entityManager;
 
   private static Stream<Arguments> storeResourcesSuccessfully() {
@@ -109,8 +110,7 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
   @ParameterizedTest(name = "{0}")
   @MethodSource
   void storeResourcesSuccessfully(
-      final String inputFhirJson, final List<AbstractResourceEntity> expectedEntities)
-      throws JsonProcessingException {
+      final String inputFhirJson, final List<AbstractResourceEntity> expectedEntities) {
 
     final long rowCountBefore = countResourceRowsInDatabase();
     final String body = executeCall(inputFhirJson, HttpStatus.OK);
@@ -189,12 +189,12 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
   }
 
   @Test
-  void validationError() throws JsonProcessingException {
+  void validationError() {
     final Binary binary = jsonToResource(Binary.class, VALID_BINARY_JSON);
     binary.setContentType(null); // this is an input error since the field is mandatory
     final String input = resourceToJsonString(binary);
 
-    final String body = executeCall(input, HttpStatus.UNPROCESSABLE_ENTITY);
+    final String body = executeCall(input, HttpStatus.UNPROCESSABLE_CONTENT);
 
     final ErrorDTO errorDTO = objectMapper.readValue(body, ErrorDTO.class);
     assertThat(errorDTO)
@@ -215,7 +215,7 @@ class FhirWriterIntegrationSystemTest extends TestWithPostgresContainer {
 
     final String body = response.getBody();
 
-    assertThat(response.getStatusCode()).isEqualTo(expectedStatus);
+    assertThat(response.getStatusCode().value()).isEqualTo(expectedStatus.value());
     assertThat(body).isNotBlank();
 
     log.info("Response Body: {}", body);

@@ -10,7 +10,7 @@ All URIs are relative to *http://localhost*
 
 <a name="findById"></a>
 # **findById**
-> Object findById(id)
+> Object findById(headers, id)
 
 
 
@@ -18,6 +18,7 @@ All URIs are relative to *http://localhost*
 
 |Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **headers** | [**HttpHeaders**](../Models/.md)|  | [default to null] |
 | **id** | **UUID**|  | [default to null] |
 
 ### Return type
@@ -35,7 +36,7 @@ No authorization required
 
 <a name="search"></a>
 # **search**
-> Object search(requestParams)
+> Object search(headers, requestParams)
 
 
 
@@ -43,6 +44,7 @@ No authorization required
 
 |Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **headers** | [**HttpHeaders**](../Models/.md)|  | [default to null] |
 | **requestParams** | [**MultiValueMapStringString**](../Models/List.md)|  | [default to null] |
 
 ### Return type
