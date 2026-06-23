@@ -4,11 +4,11 @@
   <parent>
     <groupId>de.gematik.demis</groupId>
     <artifactId>spring-parent</artifactId>
-    <version>2.16.1</version>
+    <version>4.0.6</version>
     <relativePath></relativePath><!-- lookup parent from repository -->
   </parent>
   <artifactId>fhir-storage-service</artifactId>
-  <version>1.4.0-SNAPSHOT</version>
+  <version>1.5.0-SNAPSHOT</version>
   <name>fhir-storage-service</name>
   <packaging>pom</packaging>
   <description>DEMIS Services for storing and reading FHIR bundle Resources</description>
@@ -19,12 +19,9 @@
     </license>
   </licenses>
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <java.version>25</java.version>
     <checker-qual.version>3.49.4</checker-qual.version>
     <openapi-generator.inputSpec>${project.build.directory}/spec/api-spec.yaml</openapi-generator.inputSpec>
     <sonar.sarifReportPaths>sast-report/sast.sarif</sonar.sarifReportPaths>
-    <testcontainers.version>2.0.2</testcontainers.version>
   </properties>
   <build>
     <finalName>${project.artifactId}</finalName>
@@ -40,14 +37,9 @@
       <dependency>
         <groupId>de.gematik.demis</groupId>
         <artifactId>spring-parent</artifactId>
-        <version>2.16.1</version>
+        <version>4.0.3</version>
         <classifier>tests</classifier>
         <type>test-jar</type>
-      </dependency>
-      <dependency>
-        <groupId>de.gematik.demis</groupId>
-        <artifactId>spring-parent</artifactId>
-        <version>2.16.1</version>
       </dependency>
     </dependencies>
   </dependencyManagement><!-- Override profile from parent to skip the step when building the parent pom -->

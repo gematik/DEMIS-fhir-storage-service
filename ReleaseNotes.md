@@ -1,6 +1,13 @@
 <img align="right" width="250" height="47" src="media/Gematik_Logo_Flag.png" alt="gematik GmbH Logo"/> <br/> 
  
 # Release notes
+## Release 1.5.0
+- added prometheus pod annotations to purger helm chart
+- upgraded to spring boot 4
+- arranged jvm options and resource limits
+- optimized custom environment variables handling in helm chart
+- updated docker base image to gematik1/osadl-alpine-openjdk25-jre:1.0.5
+
 ## Release 1.4.0 
 - updated base-image and updated from java 21 to java 25
 - Removed istio helm chart

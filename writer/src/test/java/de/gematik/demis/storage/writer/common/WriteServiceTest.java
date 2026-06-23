@@ -52,7 +52,7 @@ class WriteServiceTest {
   @Test
   void invalidFhirInput() {
     final ServiceException exception =
-        catchThrowableOfType(() -> underTest.store("{}"), ServiceException.class);
+        catchThrowableOfType(ServiceException.class, () -> underTest.store("{}"));
 
     assertThat(exception)
         .isNotNull()

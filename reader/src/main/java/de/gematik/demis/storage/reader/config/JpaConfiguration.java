@@ -31,7 +31,7 @@ import de.gematik.demis.storage.common.entity.BinaryEntity;
 import de.gematik.demis.storage.common.entity.BundleEntity;
 import de.gematik.demis.storage.reader.FhirStorageReader;
 import de.gematik.demis.storage.reader.common.sql.SimpleJpaRepositoryWithSqlSupport;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.persistence.autoconfigure.EntityScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 

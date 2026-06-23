@@ -41,7 +41,7 @@ public abstract class BatchPurge implements Purge {
   }
 
   @Override
-  public final CompletableFuture<Void> run() {
+  public CompletableFuture<Void> run() {
     initialize();
     purge();
     return batchProcessor.future();

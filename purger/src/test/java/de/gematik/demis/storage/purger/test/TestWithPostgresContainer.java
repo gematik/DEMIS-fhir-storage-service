@@ -27,13 +27,13 @@ package de.gematik.demis.storage.purger.test;
  * #L%
  */
 
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.annotation.DirtiesContext;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 @Testcontainers
 @AutoConfigureTestDatabase(replace = Replace.NONE)
@@ -41,6 +41,5 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class TestWithPostgresContainer {
 
   @Container @ServiceConnection
-  protected static PostgreSQLContainer<?> postgres =
-      new PostgreSQLContainer<>("postgres:14-alpine");
+  protected static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:14-alpine");
 }

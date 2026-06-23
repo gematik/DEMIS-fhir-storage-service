@@ -69,13 +69,11 @@ VALUES ('00000000-0000-0000-0001-000000000001',
         '[
           {
             "code": "1.01.0.53.",
-            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment",
-            "display": null
+            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment"
           },
           {
             "code": "2.22.0.22.02.",
-            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier",
-            "display": null
+            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier"
           }
         ]',
         '061f30ab559170b6c4db82ca25ef6daa',
@@ -87,13 +85,11 @@ VALUES ('00000000-0000-0000-0001-000000000001',
         '[
           {
             "code": "1.01.0.53.",
-            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment",
-            "display": null
+            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment"
           },
           {
             "code": "1.11.0.11.01.",
-            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier",
-            "display": null
+            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier"
           }
         ]',
         '061f30ab559170b6c4db82ca25ef6daa',
@@ -105,13 +101,11 @@ VALUES ('00000000-0000-0000-0001-000000000001',
         '[
           {
             "code": "2.01.5.99",
-            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment",
-            "display": null
+            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartment"
           },
           {
             "code": "1.11.0.11.01.",
-            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier",
-            "display": null
+            "system": "https://demis.rki.de/fhir/CodeSystem/ResponsibleDepartmentNotifier"
           }
         ]',
         '061f30ab559170b6c4db82ca25ef6daa',

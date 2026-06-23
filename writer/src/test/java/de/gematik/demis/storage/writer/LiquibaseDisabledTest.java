@@ -38,7 +38,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest(properties = "spring.liquibase.enabled=false")
 @ActiveProfiles("test")
-public class LiquibaseDisabledTest extends TestWithPostgresContainer {
+class LiquibaseDisabledTest extends TestWithPostgresContainer {
   @Autowired private ApplicationContext context;
 
   @Test

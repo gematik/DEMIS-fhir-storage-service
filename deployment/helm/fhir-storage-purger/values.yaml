@@ -3,6 +3,7 @@
 # Enables debug mode
 debug:
   enable: false
+  params: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9000"
 
 # Defines the Schedule for the CronJob
 cronJobSchedule: "0 22 * * *"
@@ -36,14 +37,17 @@ config:
 # customEnvVars
 #   key: value
 customEnvVars:
+  JAVA_TOOL_OPTIONS: "-XX:ActiveProcessorCount=2 -XX:MaxRAMPercentage=70.0 -XX:MaxMetaspaceSize=96m -XX:+UseParallelGC"
+  TZ: "Europe/Berlin"
+  SPRING_CONFIG_IMPORT: "optional:configtree:/secrets/*/,optional:file:./config/periods.yaml"
   DB_URL: "jdbc:postgresql://pgbouncer.demis.svc.cluster.local/fhir-storage"
   DB_USER: fhir-storage-purger
 
 # Define custom Container Entrypoint and Arguments (e.g. JVM Tuning)
 # If not given, the Entrypoint defined in Dockerfile will be used
 application:
-  entrypoint: ["java"]
-  parameters: ["-XX:ActiveProcessorCount=2", "-XX:MaxRAMPercentage=65.0", "-XX:+TieredCompilation", "-XX:+UseG1GC", "-jar", "/app.jar"]
+  entrypoint: []
+  parameters: []
 
 # Define Image Pull Secrets if using private registry
 imagePullSecrets: []
@@ -64,7 +68,10 @@ serviceAccount:
 annotations: {}
 
 # Annotations for Pods
-podAnnotations: {}
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "/actuator/prometheus"
+  prometheus.io/port: "8080"
 
 # Pod Security Context - applies to all containers in a Pod
 podSecurityContext:

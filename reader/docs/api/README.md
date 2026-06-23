@@ -16,6 +16,12 @@ All URIs are relative to *http://localhost*
 <a name="documentation-for-models"></a>
 ## Documentation for Models
 
+ - [ContentDisposition](./Models/ContentDisposition.md)
+ - [HttpHeaders](./Models/HttpHeaders.md)
+ - [HttpHeaders_acceptLanguage_inner](./Models/HttpHeaders_acceptLanguage_inner.md)
+ - [HttpHeaders_host](./Models/HttpHeaders_host.md)
+ - [HttpHeaders_host_address](./Models/HttpHeaders_host_address.md)
+ - [MediaType](./Models/MediaType.md)
  - [MultiValueMapStringString](./Models/MultiValueMapStringString.md)
 
 
